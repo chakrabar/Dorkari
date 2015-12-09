@@ -35,6 +35,22 @@ namespace Dorkari.Helpers.Core.Extensions
             return collection == null ? 0 : collection.Count();
         }
 
+        public static IEnumerable<T> DistinctBy<T>(this IEnumerable<T> collection, Func<T, string> propertySelector, bool includeAllEmpty = false) //TODO: Func<T, U>
+        {
+            if (collection == null)
+                throw new ArgumentException("collection");
+            if (propertySelector == null)
+                throw new ArgumentException("propertySelector");
+
+            var tempGroupKeyIndex = 0;
+            return collection.GroupBy(c => includeAllEmpty 
+                                           ? (string.IsNullOrEmpty(propertySelector(c)) 
+                                                ? (++tempGroupKeyIndex).ToString() 
+                                                : propertySelector(c)) 
+                                           : propertySelector(c))
+                             .Select(grp => grp.First());
+        }
+
         public static TSource MaxBy<TSource, TProperty>(this IEnumerable<TSource> collection, Func<TSource, TProperty> propertySelector)
             where TSource : class
             where TProperty : IComparable<TProperty>
