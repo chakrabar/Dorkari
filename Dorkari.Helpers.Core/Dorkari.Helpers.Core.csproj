@@ -46,6 +46,7 @@
     <Compile Include="Extensions\CollectionExtensions.cs" />
     <Compile Include="Extensions\ObjectExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
+    <Compile Include="Utilities\GenericHelper.cs" />
     <Compile Include="Utilities\ReflectionHelper.cs" />
     <Compile Include="Utilities\XmlHelper.cs" />
     <Compile Include="Xml\XmlLinqExtensions.cs" />
