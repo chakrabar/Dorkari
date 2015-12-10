@@ -1,3 +1,13 @@
+# =======chakrabar=========
+# =========================
+**/bin/**
+**/obj/**
+packages/
+*.v12.suo
+
+# =========================
+# Git AutoCreated ignores v
+# =========================
 # Windows image file caches
 Thumbs.db
 ehthumbs.db
