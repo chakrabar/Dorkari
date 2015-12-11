@@ -4,15 +4,16 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{FF2A3B03-AD8D-4D38-AFEA-701B00B4FE3D}</ProjectGuid>
-    <OutputType>Library</OutputType>
+    <ProjectGuid>{70EAEB7E-A344-460D-A5A8-6AD67FE73BFD}</ProjectGuid>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Dorkari.Helpers.Files</RootNamespace>
-    <AssemblyName>Dorkari.Helpers.Files</AssemblyName>
+    <RootNamespace>Dorkari.Samples.Cmd</RootNamespace>
+    <AssemblyName>Dorkari.Samples.Cmd</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -22,6 +23,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -30,11 +32,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="ICSharpCode.SharpZipLib">
-      <HintPath>..\packages\SharpZipLib.0.86.0\lib\20\ICSharpCode.SharpZipLib.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
-    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -43,14 +41,26 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Compresser.cs" />
-    <Compile Include="Constants.cs" />
-    <Compile Include="FileHelper.cs" />
+    <Compile Include="Fun\ThreadConsoleWriter.cs" />
+    <Compile Include="Models\CourseModels.cs" />
+    <Compile Include="Models\SoldiarModels.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SimpleFileLogger.cs" />
+    <Compile Include="Tests\GenericInheritance.cs" />
+    <Compile Include="Tests\MergeSort.cs" />
+    <Compile Include="Tests\RegexTests.cs" />
+    <Compile Include="Tests\TypeInferenceTest.cs" />
+    <Compile Include="Tests\WeirdClasses.cs" />
+    <Compile Include="Threads\TaskWithAwait.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Dorkari.Helpers.Core\Dorkari.Helpers.Core.csproj">
+      <Project>{a6e88ab8-bab0-411c-a814-cbbf6b5a0799}</Project>
+      <Name>Dorkari.Helpers.Core</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

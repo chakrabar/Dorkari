@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 
@@ -37,17 +38,46 @@ namespace Dorkari.Helpers.Core.Utilities
             return Convert.ChangeType(property.GetValue(obj), propType);
         }
 
-        public static string GetCallingMethodName(string Message, [CallerMemberName] string callerName = "")
+        public static string GetCallingMethodName(string message, [CallerMemberName] string callerName = "")
         {
-            return callerName + " " + Message;
+            return callerName + " " + message;
         }
 
         public static string GetCallingMethodDetails()
         {
             var callingStackFrame = new StackTrace().GetFrame(1);
-            var callingmethod = callingStackFrame.GetMethod().Name;
+            var callingMethod = callingStackFrame.GetMethod().Name;
             var callingType = callingStackFrame.GetMethod().DeclaringType.Name;
-            return callingmethod + "() from Type '" + callingType + "' called me!";
+            return callingMethod + "() from Type '" + callingType + "' called me!";
+        }
+
+        public static string GetConcatenatedProprtyValues(object obj, string separator = ",")
+        {
+            return string.Join(separator, obj.GetType()
+                                        .GetProperties()
+                                        .Select(prop => prop.GetValue(obj).ToString()));
+        }
+
+        public static T MapTo<T>(object source) where T : new()
+        {
+            if (source == null)
+                return default(T);
+
+            var destination = Activator.CreateInstance<T>();
+
+            var sourceProperties = source.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public);
+            var destinationProperties = destination.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public);
+
+            foreach (var destProp in destinationProperties)
+            {
+                var matchingSrcProp = sourceProperties.FirstOrDefault(sp => sp.Name.Equals(destProp.Name) 
+                                                                        && sp.PropertyType.Equals(destProp.PropertyType));
+                if (matchingSrcProp != null)
+                {
+                    destProp.SetValue(destination, matchingSrcProp.GetValue(source));
+                }
+            }
+            return destination;
         }
     }
 }

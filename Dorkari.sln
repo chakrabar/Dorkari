@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dorkari.Helpers.Serializati
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dorkari.Helpers.Files", "Dorkari.Helpers.File\Dorkari.Helpers.Files.csproj", "{FF2A3B03-AD8D-4D38-AFEA-701B00B4FE3D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dorkari.Samples.Cmd", "Dorkari.Samples.Cmd\Dorkari.Samples.Cmd.csproj", "{70EAEB7E-A344-460D-A5A8-6AD67FE73BFD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{FF2A3B03-AD8D-4D38-AFEA-701B00B4FE3D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FF2A3B03-AD8D-4D38-AFEA-701B00B4FE3D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FF2A3B03-AD8D-4D38-AFEA-701B00B4FE3D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{70EAEB7E-A344-460D-A5A8-6AD67FE73BFD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{70EAEB7E-A344-460D-A5A8-6AD67FE73BFD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{70EAEB7E-A344-460D-A5A8-6AD67FE73BFD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{70EAEB7E-A344-460D-A5A8-6AD67FE73BFD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

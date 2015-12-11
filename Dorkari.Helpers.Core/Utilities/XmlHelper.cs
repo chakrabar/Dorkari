@@ -8,17 +8,13 @@ namespace Dorkari.Helpers.Core.Utilities
     {
         public static XDocument ReadXMLContent(string xmlFilePath)
         {
-            if (!string.IsNullOrEmpty(xmlFilePath))
-            {
-                string content = File.ReadAllText(xmlFilePath);
-                XDocument xDoc = XDocument.Parse(content);
-                return xDoc;
-            }
-            return null;
+            if (string.IsNullOrEmpty(xmlFilePath))
+                return null;
+            string content = File.ReadAllText(xmlFilePath);
+            return XDocument.Parse(content);
         }
 
-
-        public static string GetXmlNodeValue(XDocument xDoc, string nodeName)
+        public static string GetFirstNodeValue(XDocument xDoc, string nodeName)
         {
             //incase of multiple nodes with same Name,this one will return value of first node only
             var node = xDoc.Descendants().Where(p => p.Name.LocalName == nodeName).FirstOrDefault();
@@ -27,7 +23,7 @@ namespace Dorkari.Helpers.Core.Utilities
             return string.Empty;
         }
 
-        public static string GetXmlNodeValue(XDocument xDoc, string parentNode, string childNode)
+        public static string GetFirstChildValueOfFirstParent(XDocument xDoc, string parentNode, string childNode)
         {
             //incase of multiple nodes with same Name,this one will return value of first node only
             var node = xDoc.Descendants().Where(p => p.Name.LocalName == parentNode).FirstOrDefault();

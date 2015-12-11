@@ -6,7 +6,7 @@ namespace Dorkari.Helpers.Core.Extensions
 {
     public static class CollectionExtensions
     {
-        private static Random rng = new Random();
+        private static Random rn = new Random();
 
         public static void Shuffle<T>(this IList<T> list)
         {
@@ -14,7 +14,7 @@ namespace Dorkari.Helpers.Core.Extensions
             while (n > 1)
             {
                 n--;
-                int k = rng.Next(n + 1);
+                int k = rn.Next(n + 1);
                 T value = list[k];
                 list[k] = list[n];
                 list[n] = value;
@@ -35,27 +35,27 @@ namespace Dorkari.Helpers.Core.Extensions
             return collection == null ? 0 : collection.Count();
         }
 
-        public static IEnumerable<T> DistinctBy<T>(this IEnumerable<T> collection, Func<T, string> propertySelector, bool includeAllEmpty = false) //TODO: Func<T, U>
+        public static IEnumerable<T> DistinctBy<T>(this IEnumerable<T> collection, Func<T, string> selector, bool includeAllEmpty = false) //TODO: Func<T, U>
         {
             if (collection == null)
                 throw new ArgumentException("collection");
-            if (propertySelector == null)
+            if (selector == null)
                 throw new ArgumentException("propertySelector");
 
             var tempGroupKeyIndex = 0;
             return collection.GroupBy(c => includeAllEmpty 
-                                           ? (string.IsNullOrEmpty(propertySelector(c)) 
+                                           ? (string.IsNullOrEmpty(selector(c)) 
                                                 ? (++tempGroupKeyIndex).ToString() 
-                                                : propertySelector(c)) 
-                                           : propertySelector(c))
+                                                : selector(c)) 
+                                           : selector(c))
                              .Select(grp => grp.First());
         }
 
-        public static TSource MaxBy<TSource, TProperty>(this IEnumerable<TSource> collection, Func<TSource, TProperty> propertySelector)
+        public static TSource MaxBy<TSource, TProperty>(this IEnumerable<TSource> collection, Func<TSource, TProperty> selector)
             where TSource : class
             where TProperty : IComparable<TProperty>
         {
-            if (propertySelector == null)
+            if (selector == null)
                 throw new ArgumentException("propertySelector");
             if (collection == null || collection.Count() == 0)
                 return null;
@@ -63,7 +63,7 @@ namespace Dorkari.Helpers.Core.Extensions
             TSource maxItem = null;
             foreach (var item in collection)
             {
-                if (maxItem == null || propertySelector(item).CompareTo(propertySelector(maxItem)) > 0)
+                if (maxItem == null || selector(item).CompareTo(selector(maxItem)) > 0)
                 {
                     maxItem = item;
                 }
@@ -71,11 +71,11 @@ namespace Dorkari.Helpers.Core.Extensions
             return maxItem;
         }
 
-        public static TSource MinBy<TSource, TProperty>(this IEnumerable<TSource> collection, Func<TSource, TProperty> propertySelector)
+        public static TSource MinBy<TSource, TProperty>(this IEnumerable<TSource> collection, Func<TSource, TProperty> selector)
             where TSource : class //, struct
             where TProperty : IComparable<TProperty>
         {
-            if (propertySelector == null)
+            if (selector == null)
                 throw new ArgumentException("propertySelector");
             if (collection == null || collection.Count() == 0)
                 return null;
@@ -83,7 +83,7 @@ namespace Dorkari.Helpers.Core.Extensions
             TSource minItem = null;
             foreach (var item in collection)
             {
-                if (minItem == null || propertySelector(item).CompareTo(propertySelector(minItem)) < 0)
+                if (minItem == null || selector(item).CompareTo(selector(minItem)) < 0)
                 {
                     minItem = item;
                 }
@@ -125,6 +125,59 @@ namespace Dorkari.Helpers.Core.Extensions
                 throw new ArgumentException("value");
             var property = typeof(T).GetProperty(propertyName);
             list.RemoveAll(item => property.GetValue(item, null).Equals(value));
+        }
+
+        public static IEnumerable<T> SubList<T>(this IEnumerable<T> collection, int startIndex, int count)
+        {
+            if (collection == null)
+                throw new ArgumentException("collection");
+            if (startIndex < 0 || startIndex >= collection.Count())
+                throw new ArgumentException("Invalid value", "startIndex");
+            if (count < 0)
+                throw new ArgumentException("Invalid value", "count");
+
+            var index = 0;
+            foreach (var item in collection)
+            {
+                var current = index;
+                index++;
+                if (current >= startIndex && current < startIndex + count)
+                    yield return item;
+                else if (current >= startIndex + count)
+                    yield break;
+            }
+        }
+
+        //TODO: this is O(n^2)
+        public static bool HasSameElementsAs<T>(this IEnumerable<T> collection, IEnumerable<T> second) where T : IEquatable<T>
+        {
+            if (collection == null && second == null)
+                return true;
+            if (collection == null || second == null)
+                return false;
+            if (ReferenceEquals(collection, second))
+                return true;
+            if (collection.Count() != second.Count())
+                return false;
+
+            return collection.All(c => second.Any(o => o.Equals(c)));
+        }
+
+        public static bool IsSameAs<T>(this List<T> list, List<T> second) where T : IComparable<T>
+        {
+            if (list == null && second == null) //required?
+                return true;
+            if (list == null || second == null)
+                return false;            
+            if (ReferenceEquals(list, second))
+                return true;
+            if (list.Count() != second.Count())
+                return false;
+
+            list.Sort();
+            second.Sort();
+
+            return list.SequenceEqual(second);
         }
     }
 }
