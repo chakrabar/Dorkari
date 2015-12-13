@@ -41,6 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Examples\PollerExample.cs" />
     <Compile Include="Fun\ThreadConsoleWriter.cs" />
     <Compile Include="Models\CourseModels.cs" />
     <Compile Include="Models\SoldiarModels.cs" />

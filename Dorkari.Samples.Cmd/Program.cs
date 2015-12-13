@@ -1,4 +1,4 @@
-﻿using Dorkari.Samples.Cmd.Fun;
+﻿using Dorkari.Samples.Cmd.Examples;
 using System;
 
 namespace Dorkari.Samples.Cmd
@@ -7,11 +7,11 @@ namespace Dorkari.Samples.Cmd
     {
         static void Main(string[] args)
         {
-            ThreadConsoleWriter.Start();
+            PollerExample.Show();
             Console.ReadLine();
 
             Console.WriteLine("Dorkari tests");
             Console.ReadLine();
-        }
+        }                
     }
 }

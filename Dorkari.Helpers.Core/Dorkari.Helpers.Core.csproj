@@ -51,6 +51,7 @@
     <Compile Include="Utilities\DynamicHelper.cs" />
     <Compile Include="Utilities\GenericHelper.cs" />
     <Compile Include="Utilities\ReflectionHelper.cs" />
+    <Compile Include="Utilities\Poller.cs" />
     <Compile Include="Utilities\XmlHelper.cs" />
     <Compile Include="Xml\XmlLinqExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
