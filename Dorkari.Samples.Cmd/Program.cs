@@ -7,11 +7,17 @@ namespace Dorkari.Samples.Cmd
     {
         static void Main(string[] args)
         {
-            PollerExample.Show();
-            Console.ReadLine();
-
+            try
+            {
+                PollerExample.Show();                
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine("Exception!! Message: {0}", ex.Message);
+            }
+            
             Console.WriteLine("Dorkari tests");
             Console.ReadLine();
-        }                
+        }
     }
 }

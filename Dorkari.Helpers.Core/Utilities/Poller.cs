@@ -7,7 +7,7 @@ namespace Dorkari.Helpers.Core.Utilities
 {
     public class Poller
     {
-        const int _DefaultRtryLimit = 5;
+        const int _DefaultRtryLimit = 2;
         List<Type> _allowedExceptionTypes; //all are allowed if this is not set | mutually exclusive to _forbiddenExceptionTypes
         List<Type> _forbiddenExceptionTypes; //none are forbidden if this is not set | mutually exclusive to _allowedExceptionTypes
         int _retryLimit;
@@ -28,7 +28,7 @@ namespace Dorkari.Helpers.Core.Utilities
             return this;
         }
 
-        public Poller StopOnException<E>() where E : Exception //TODO: implement in Execute()
+        public Poller StopOnException<E>() where E : Exception //TODO: check implementation in Execute()
         {
             if (_allowedExceptionTypes.Count > 0)
                 throw new ArgumentException("Cannot add forbidden exception if allowed exceptions are present");
@@ -59,7 +59,9 @@ namespace Dorkari.Helpers.Core.Utilities
                 }
                 catch (Exception ex)
                 {
-                    if (_allowedExceptionTypes.Count == 0 || _allowedExceptionTypes.Any(ae => ae.IsAssignableFrom(ex.GetType())))
+                    if ((_allowedExceptionTypes.Count == 0 && _forbiddenExceptionTypes.Count == 0)
+                        || _allowedExceptionTypes.Any(ae => ae.IsAssignableFrom(ex.GetType()))
+                        || _forbiddenExceptionTypes.Any() && !_forbiddenExceptionTypes.Any(fe => fe.IsAssignableFrom(ex.GetType())))
                     {
                         if (_waitMilliSeconds > 0 && timesToRetry > 1)
                             Thread.Sleep(_waitMilliSeconds);
@@ -85,7 +87,9 @@ namespace Dorkari.Helpers.Core.Utilities
                 }
                 catch (Exception ex)
                 {
-                    if (_allowedExceptionTypes.Count == 0 || _allowedExceptionTypes.Any(ae => ae.IsAssignableFrom(ex.GetType())))
+                    if ((_allowedExceptionTypes.Count == 0 && _forbiddenExceptionTypes.Count == 0) 
+                        || _allowedExceptionTypes.Any(ae => ae.IsAssignableFrom(ex.GetType()))
+                        || _forbiddenExceptionTypes.Any() && !_forbiddenExceptionTypes.Any(fe => fe.IsAssignableFrom(ex.GetType())))
                     {
                         if (_waitMilliSeconds > 0 && timesToRetry > 1)
                             Thread.Sleep(_waitMilliSeconds);

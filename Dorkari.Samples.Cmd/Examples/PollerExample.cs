@@ -8,6 +8,11 @@ namespace Dorkari.Samples.Cmd.Examples
     {
         public static void Show()
         {
+            //basic
+            new Poller()
+                .Execute(() => TestMeth(10));
+
+            //Func example
             string result = new Poller()
                             .WithException<ArgumentNullException>()
                             .WithException<DivideByZeroException>()
@@ -15,6 +20,7 @@ namespace Dorkari.Samples.Cmd.Examples
                             .WithWait(4000)
                             .Execute(() => GetTestString(1));
 
+            //Action example
             new Poller()
                 .StopOnException<ApplicationException>()
                 .WithRetries(3)
@@ -24,7 +30,7 @@ namespace Dorkari.Samples.Cmd.Examples
 
         static string GetTestString(int arg)
         {
-            Thread.Sleep(1000);
+            Thread.Sleep(200);
             if (DateTime.Now.Second % 2 == 0)
                 return arg.ToString();
             throw new DivideByZeroException();
@@ -32,10 +38,10 @@ namespace Dorkari.Samples.Cmd.Examples
 
         static void TestMeth(int arg)
         {
-            Thread.Sleep(1000);
-            if (DateTime.Now.Second % 2 == 0)
-                return;
-            throw new DivideByZeroException();
+            //Thread.Sleep(200);
+            //if (DateTime.Now.Second % 2 == 0)
+                //throw new InvalidOperationException("Allowed");
+            throw new ApplicationException("Not Allowed");
         }
     }
 }
