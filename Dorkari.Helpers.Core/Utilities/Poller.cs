@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace Dorkari.Helpers.Core.Utilities
 {
@@ -50,32 +51,15 @@ namespace Dorkari.Helpers.Core.Utilities
 
         public T Execute<T>(Func<T> methodToInvoke)
         {
-            var timesToRetry = _retryLimit;
-            do
+            T retval = default(T);
+            Execute(() =>
             {
-                try
-                {
-                    return methodToInvoke();
-                }
-                catch (Exception ex)
-                {
-                    if ((_allowedExceptionTypes.Count == 0 && _forbiddenExceptionTypes.Count == 0)
-                        || _allowedExceptionTypes.Any(ae => ae.IsAssignableFrom(ex.GetType()))
-                        || _forbiddenExceptionTypes.Any() && !_forbiddenExceptionTypes.Any(fe => fe.IsAssignableFrom(ex.GetType())))
-                    {
-                        if (_waitMilliSeconds > 0 && timesToRetry > 1)
-                            Thread.Sleep(_waitMilliSeconds);
-                        timesToRetry--;
-                    }
-                    else
-                        throw;
-                }
-            } while (timesToRetry > 0);
-            
-            return default(T);
+                retval = methodToInvoke();
+            });
+            return retval;
         }
 
-        public void Execute(Action methodToInvoke) //TODO: reduce duplication
+        public void Execute(Action methodToInvoke)
         {
             var timesToRetry = _retryLimit;
             do

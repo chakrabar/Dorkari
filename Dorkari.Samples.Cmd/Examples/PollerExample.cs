@@ -17,13 +17,13 @@ namespace Dorkari.Samples.Cmd.Examples
                             .WithException<ArgumentNullException>()
                             .WithException<DivideByZeroException>()
                             .WithRetries(3)
-                            .WithWait(4000)
+                            .WithWait(3000)
                             .Execute(() => GetTestString(1));
 
             //Action example
             new Poller()
                 .StopOnException<ApplicationException>()
-                .WithRetries(3)
+                .WithRetries(5)
                 .WithWait(4000)
                 .Execute(() => TestMeth(1));
         }
@@ -38,9 +38,9 @@ namespace Dorkari.Samples.Cmd.Examples
 
         static void TestMeth(int arg)
         {
-            //Thread.Sleep(200);
-            //if (DateTime.Now.Second % 2 == 0)
-                //throw new InvalidOperationException("Allowed");
+            Thread.Sleep(200);
+            if (DateTime.Now.Second % 2 == 0)
+                throw new InvalidOperationException("Allowed");
             throw new ApplicationException("Not Allowed");
         }
     }

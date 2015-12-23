@@ -16,9 +16,9 @@ namespace Dorkari.Helpers.Core.Extensions
             }
         }
 
-        public static string ToJson<T>(this T obj)
+        public static string ToJson<T>(this T obj, bool isIndented = false)
         {
-            return JsonConvert.SerializeObject(obj);
+            return JsonConvert.SerializeObject(obj, isIndented ? Formatting.Indented : Formatting.None);
         }
 
         public static T DeepClone<T>(this T obj)
