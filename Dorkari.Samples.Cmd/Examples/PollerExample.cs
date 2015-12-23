@@ -12,20 +12,21 @@ namespace Dorkari.Samples.Cmd.Examples
             new Poller()
                 .Execute(() => TestMeth(10));
 
+            //example with configuration
+            var meta = new Poller()
+                        .WithException<ApplicationException>()
+                        .WithRetries(5)
+                        .WithWait(1500)
+                        .Execute(() => TestMeth(1));
+
             //Func example
-            string result = new Poller()
+            var pollResult = new Poller()
                             .WithException<ArgumentNullException>()
                             .WithException<DivideByZeroException>()
                             .WithRetries(3)
                             .WithWait(3000)
                             .Execute(() => GetTestString(1));
-
-            //Action example
-            new Poller()
-                .StopOnException<ApplicationException>()
-                .WithRetries(5)
-                .WithWait(4000)
-                .Execute(() => TestMeth(1));
+            string value = pollResult.Result;
         }
 
         static string GetTestString(int arg)

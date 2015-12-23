@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace Dorkari.Helpers.Core.Utilities
 {
@@ -49,28 +48,31 @@ namespace Dorkari.Helpers.Core.Utilities
             return this;
         }
 
-        public T Execute<T>(Func<T> methodToInvoke)
+        public PollResult<T> Execute<T>(Func<T> methodToInvoke)
         {
             T retval = default(T);
-            Execute(() =>
+            var pollResult = Execute(() =>
             {
                 retval = methodToInvoke();
             });
-            return retval;
+            return new PollResult<T>(pollResult, retval);
         }
 
-        public void Execute(Action methodToInvoke)
+        public PollResult Execute(Action methodToInvoke)
         {
             var timesToRetry = _retryLimit;
+            var result = new PollResult();
             do
             {
                 try
                 {
+                    result.Attempts += 1;
                     methodToInvoke();
                     break;
                 }
                 catch (Exception ex)
                 {
+                    result.Exceptions.Add(ex);
                     if ((_allowedExceptionTypes.Count == 0 && _forbiddenExceptionTypes.Count == 0) 
                         || _allowedExceptionTypes.Any(ae => ae.IsAssignableFrom(ex.GetType()))
                         || _forbiddenExceptionTypes.Any() && !_forbiddenExceptionTypes.Any(fe => fe.IsAssignableFrom(ex.GetType())))
@@ -84,7 +86,30 @@ namespace Dorkari.Helpers.Core.Utilities
                 }
             } while (timesToRetry > 0);
 
-            return;
+            return result;
+        }
+    }
+
+    public class PollResult
+    {
+        public int Attempts { get; set; }
+        public List<Exception> Exceptions { get; set; }
+
+        public PollResult()
+        {
+            Exceptions = new List<Exception>();
+        }
+    }
+
+    public class PollResult<T> : PollResult
+    {
+        public T Result { get; set; }
+
+        public PollResult(PollResult parent, T val)
+        {
+            Attempts = parent.Attempts;
+            Exceptions = parent.Exceptions;
+            Result = val;
         }
     }
 }
