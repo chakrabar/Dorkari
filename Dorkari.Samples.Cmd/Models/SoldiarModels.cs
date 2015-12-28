@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 namespace Dorkari.Samples.Cmd.Models
 {
+    //NO! I do NOT write many classes in a file
     public class SoldierDTO : IEquatable<SoldierDTO>
     {
         public int Id { get; set; }
