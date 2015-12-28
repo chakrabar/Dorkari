@@ -3,12 +3,17 @@ using System.Collections.Generic;
 
 namespace Dorkari.Samples.Cmd.Models
 {
-    public class SoldierDTO
+    public class SoldierDTO : IEquatable<SoldierDTO>
     {
         public int Id { get; set; }
         public string Name { get; set; }
         public string Category { get; set; }
         public List<int> YearsFought { get; set; }
+
+        public bool Equals(SoldierDTO other)
+        {
+            return this.Id == other.Id;
+        }
     }
 
     public class Officer

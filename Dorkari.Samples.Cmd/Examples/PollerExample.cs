@@ -25,7 +25,7 @@ namespace Dorkari.Samples.Cmd.Examples
                             .WithException<DivideByZeroException>()
                             .WithRetries(3)
                             .WithWait(3000)
-                            .Execute(() => GetTestString(1));
+                            .Execute(() => GetTestString(1)); //.Result if only interested in the return value
             string value = pollResult.Result;
         }
 

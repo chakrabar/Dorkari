@@ -148,8 +148,7 @@ namespace Dorkari.Helpers.Core.Extensions
             }
         }
 
-        //TODO: this is O(n^2)
-        public static bool HasSameElementsAs<T>(this IEnumerable<T> collection, IEnumerable<T> second) where T : IEquatable<T>
+        public static bool HasSameUniqueElementsAs<T>(this IEnumerable<T> collection, IEnumerable<T> second) where T : IEquatable<T>
         {
             if (collection == null && second == null)
                 return true;
@@ -157,27 +156,35 @@ namespace Dorkari.Helpers.Core.Extensions
                 return false;
             if (ReferenceEquals(collection, second))
                 return true;
+
+            var uniqueFirst = collection.Distinct();
+            var uniqueSecond = second.Distinct();
+
+            foreach (var item in collection)
+            {
+                if (second.Any(s => s.Equals(item)))
+                    continue;
+                return false;
+            }
+            return true;
+        }
+
+        //TODO: this is O(nlogn), improve
+        public static bool HasSameElementsAs<T>(this List<T> collection, List<T> second) where T : IComparable<T>
+        {
+            if (collection == null && second == null)
+                return true;
+            if (collection == null || second == null)
+                return false;            
+            if (ReferenceEquals(collection, second))
+                return true;
             if (collection.Count() != second.Count())
                 return false;
 
-            return collection.All(c => second.Any(o => o.Equals(c)));
-        }
-
-        public static bool IsSameAs<T>(this List<T> list, List<T> second) where T : IComparable<T>
-        {
-            if (list == null && second == null) //required?
-                return true;
-            if (list == null || second == null)
-                return false;            
-            if (ReferenceEquals(list, second))
-                return true;
-            if (list.Count() != second.Count())
-                return false;
-
-            list.Sort();
+            collection.Sort();
             second.Sort();
 
-            return list.SequenceEqual(second);
+            return collection.SequenceEqual(second);
         }
     }
 }

@@ -1,5 +1,12 @@
-﻿using Dorkari.Samples.Cmd.Examples;
+﻿using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using Dorkari.Samples.Cmd.Examples;
+using Dorkari.Samples.Cmd.Models;
+using Dorkari.Helpers.Core.Extensions;
 
 namespace Dorkari.Samples.Cmd
 {
@@ -9,7 +16,7 @@ namespace Dorkari.Samples.Cmd
         {
             try
             {
-                PollerExample.Show();                
+                PollerExample.Show();
             }
             catch(Exception ex)
             {
