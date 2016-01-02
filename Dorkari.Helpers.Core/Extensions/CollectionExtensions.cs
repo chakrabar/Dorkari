@@ -20,6 +20,7 @@ namespace Dorkari.Helpers.Core.Extensions
                 list[n] = value;
             }
         }
+
         public static bool IsEmpty<T>(this IEnumerable<T> collection)
         {
             return collection == null || collection.Count() == 0;
@@ -169,8 +170,8 @@ namespace Dorkari.Helpers.Core.Extensions
             return true;
         }
 
-        //this is O(nlogn), uses reference comparison
-        public static bool HasSameElementReferencesAs<T>(this List<T> collection, List<T> second) where T : IComparable<T>
+        //this is O(nlogn), uses CompareTo() comparison
+        public static bool HasSameElementsAs<T>(this List<T> collection, List<T> second) where T : IComparable<T> //HasSameElementReferencesAs
         {
             if (collection == null && second == null)
                 return true;
@@ -184,11 +185,16 @@ namespace Dorkari.Helpers.Core.Extensions
             collection.Sort();
             second.Sort();
 
-            return collection.SequenceEqual(second);
+            for (int i = 0; i < collection.Count; i++)
+            {
+                if (collection[i].CompareTo(second[i]) != 0)
+                    return false;
+            }
+            return true;
         }
 
-        //this is O(n), uses hash comparison
-        public static bool HasSameElementsAs<T>(this List<T> collection, List<T> second) where T : IEqualityComparer<T>
+        //this is O(n), uses hash comparison //TODO: the name sucks
+        public static bool HasSameElementSetAs<T>(this List<T> collection, List<T> second) where T : IEqualityComparer<T>
         {
             if (collection == null && second == null)
                 return true;
