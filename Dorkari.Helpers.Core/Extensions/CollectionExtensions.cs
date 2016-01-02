@@ -169,8 +169,8 @@ namespace Dorkari.Helpers.Core.Extensions
             return true;
         }
 
-        //TODO: this is O(nlogn), improve
-        public static bool HasSameElementsAs<T>(this List<T> collection, List<T> second) where T : IComparable<T>
+        //this is O(nlogn), uses reference comparison
+        public static bool HasSameElementReferencesAs<T>(this List<T> collection, List<T> second) where T : IComparable<T>
         {
             if (collection == null && second == null)
                 return true;
@@ -185,6 +185,52 @@ namespace Dorkari.Helpers.Core.Extensions
             second.Sort();
 
             return collection.SequenceEqual(second);
+        }
+
+        //this is O(n), uses hash comparison
+        public static bool HasSameElementsAs<T>(this List<T> collection, List<T> second) where T : IEqualityComparer<T>
+        {
+            if (collection == null && second == null)
+                return true;
+            if (collection == null || second == null)
+                return false;
+            if (ReferenceEquals(collection, second))
+                return true;
+            if (collection.Count() != second.Count())
+                return false;
+
+            var countingDictForCollection = GetCountingDictionary<T>(collection);
+            var countingDictForSecond = GetCountingDictionary<T>(second);
+
+            foreach (var item in countingDictForCollection)
+            {
+                int count = 0;
+                if (countingDictForSecond.TryGetValue(item.Key, out count))
+                {
+                    if (count != item.Value)
+                        return false;
+                }
+                else
+                    return false;
+            }
+            return true;
+        }
+
+        private static Dictionary<T, int> GetCountingDictionary<T>(List<T> collection) where T : IEqualityComparer<T>
+        {
+            var checkDict = new Dictionary<T, int>();
+            foreach (var item in collection)
+            {
+                if (checkDict.ContainsKey(item))
+                {
+                    checkDict[item] = checkDict[item] + 1;
+                }
+                else
+                {
+                    checkDict.Add(item, 1);
+                }
+            }
+            return checkDict;
         }
     }
 }

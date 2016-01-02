@@ -7,6 +7,9 @@ using System.Linq;
 using Dorkari.Samples.Cmd.Examples;
 using Dorkari.Samples.Cmd.Models;
 using Dorkari.Helpers.Core.Extensions;
+using System.Xml.Linq;
+using System.Reflection;
+using System.Globalization;
 
 namespace Dorkari.Samples.Cmd
 {
@@ -18,11 +21,11 @@ namespace Dorkari.Samples.Cmd
             {
                 PollerExample.Show();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Console.WriteLine("Exception!! Message: {0}", ex.Message);
             }
-            
+
             Console.WriteLine("Dorkari tests");
             Console.ReadLine();
         }

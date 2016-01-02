@@ -58,6 +58,7 @@
     <Compile Include="Tests\TypeInferenceTest.cs" />
     <Compile Include="Tests\WeirdClasses.cs" />
     <Compile Include="Threads\TaskWithAwait.cs" />
+    <Compile Include="Threads\Threads01_Creation.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
