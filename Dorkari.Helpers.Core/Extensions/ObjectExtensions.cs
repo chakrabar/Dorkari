@@ -6,12 +6,22 @@ namespace Dorkari.Helpers.Core.Extensions
 {
     public static class ObjectExtensions
     {
-        public static string ToXml<T>(this T obj)
+        public static string ToXml<T>(this T obj, string rootName = null, bool noNameSpace = false)
         {
-            XmlSerializer serializer = new XmlSerializer(typeof(T));
+            XmlSerializer serializer = rootName == null ? new XmlSerializer(typeof(T)) : new XmlSerializer(typeof(T), new XmlRootAttribute(rootName));
+
+            var xmlNs = new XmlSerializerNamespaces();
+            if (noNameSpace)
+            {
+                xmlNs.Add(string.Empty, string.Empty);
+            }
+
             using (StringWriter sw = new StringWriter())
             {
-                serializer.Serialize(sw, obj);
+                if (noNameSpace)
+                    serializer.Serialize(sw, obj, xmlNs);
+                else
+                    serializer.Serialize(sw, obj);
                 return sw.ToString();
             }
         }

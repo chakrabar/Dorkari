@@ -238,5 +238,32 @@ namespace Dorkari.Helpers.Core.Extensions
             }
             return checkDict;
         }
+
+        public static bool HasSubSequence<T>(this List<T> main, List<T> second)
+        {
+            if (main == null || second == null)
+                return false;
+
+            var startIndex = main.IndexOf(second.First());
+            while (startIndex >= 0)
+            {
+                if (main.Count - startIndex < second.Count)
+                    return false;
+                var nonMatch = false;
+                for (int i = 0; i < second.Count; i++)
+                {
+                    if (!main[i + startIndex].Equals(second[i]))
+                    {
+                        main = main.Skip(startIndex + 1).ToList();
+                        startIndex = main.IndexOf(second.First());
+                        nonMatch = true;
+                        break;
+                    }
+                }
+                if (!nonMatch)
+                    return true;
+            }
+            return false;
+        }
     }
 }
