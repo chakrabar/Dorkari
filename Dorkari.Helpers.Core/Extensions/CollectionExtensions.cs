@@ -92,7 +92,8 @@ namespace Dorkari.Helpers.Core.Extensions
             return minItem;
         }
 
-        public static IEnumerable<T> ForEachMatch<T>(this IEnumerable<T> list, Func<T, bool> predicate, Action<T> action)
+        //update: moving this extension to List, to follow the convention of Linq. Not to cause side effects in query (well, this becomes a List method now)
+        public static IEnumerable<T> ForEachMatch<T>(this List<T> list, Func<T, bool> predicate, Action<T> action)
         {
             if (list == null)
                 throw new ArgumentException("list");
@@ -128,6 +129,7 @@ namespace Dorkari.Helpers.Core.Extensions
             list.RemoveAll(item => property.GetValue(item, null).Equals(value));
         }
 
+        //same as collection.Skip(startIndex).Take(count);
         public static IEnumerable<T> SubList<T>(this IEnumerable<T> collection, int startIndex, int count)
         {
             if (collection == null)
@@ -171,7 +173,7 @@ namespace Dorkari.Helpers.Core.Extensions
         }
 
         //this is O(nlogn), uses CompareTo() comparison
-        public static bool HasSameElementsAs<T>(this List<T> collection, List<T> second) where T : IComparable<T> //HasSameElementReferencesAs
+        public static bool HasSameElementsAs<T>(this List<T> collection, List<T> second) where T : IComparable<T>
         {
             if (collection == null && second == null)
                 return true;
@@ -264,6 +266,42 @@ namespace Dorkari.Helpers.Core.Extensions
                     return true;
             }
             return false;
+        }
+
+        public static IEnumerable<U> SelectWhere<T, U>(this IEnumerable<T> collection, Func<T, U> selector, Func<T, bool> predicate)
+        {
+            if (collection == null)
+                throw new ArgumentException("collection");
+            if (predicate == null)
+                throw new ArgumentException("predicate");
+            if (selector == null)
+                throw new ArgumentException("selector");
+            foreach (var item in collection)
+            {
+                if (predicate(item))
+                {
+                    yield return selector(item);
+                }
+            }
+        }
+
+        public static U SelectFirstOrDefault<T, U>(this IEnumerable<T> collection, Func<T, U> selector, Func<T, bool> predicate = null)
+        {
+            if (collection == null)
+                throw new ArgumentException("collection");
+            if (selector == null)
+                throw new ArgumentException("selector");
+
+            var result = default(U);
+            foreach (var item in collection)
+            {
+                if (predicate == null || predicate(item))
+                {
+                    result = selector(item);
+                    break;
+                }
+            }
+            return result;
         }
     }
 }

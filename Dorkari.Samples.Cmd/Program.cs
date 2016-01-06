@@ -19,6 +19,7 @@ namespace Dorkari.Samples.Cmd
         {
             try
             {
+                CollectionExamples.Show();
                 PollerExample.Show();
             }
             catch (Exception ex)

@@ -45,6 +45,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Examples\CollectionExamples.cs" />
     <Compile Include="Examples\ListExamples.cs" />
     <Compile Include="Examples\PollerExample.cs" />
     <Compile Include="Fun\ThreadConsoleWriter.cs" />
