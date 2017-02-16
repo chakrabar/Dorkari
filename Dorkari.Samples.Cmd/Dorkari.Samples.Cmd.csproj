@@ -48,9 +48,11 @@
     <Compile Include="Examples\CollectionExamples.cs" />
     <Compile Include="Examples\ListExamples.cs" />
     <Compile Include="Examples\PollerExample.cs" />
+    <Compile Include="Examples\ReflectionExamples.cs" />
     <Compile Include="Fun\ThreadConsoleWriter.cs" />
     <Compile Include="Models\CourseModels.cs" />
     <Compile Include="Models\SoldiarModels.cs" />
+    <Compile Include="Models\StudentModels.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tests\ArrayAndIList.cs" />

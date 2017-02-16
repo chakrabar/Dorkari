@@ -20,7 +20,7 @@ namespace Dorkari.Helpers.Core.Utilities
             _retryLimit = _DefaultRtryLimit;
         }
 
-        public Poller WithException<E>() where E : Exception
+        public Poller AllowException<E>() where E : Exception
         {
             if (_forbiddenExceptionTypes.Count > 0)
                 throw new ArgumentException("Cannot add allowed exception if forbidden exceptions are present");

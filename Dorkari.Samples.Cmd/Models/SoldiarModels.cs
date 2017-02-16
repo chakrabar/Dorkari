@@ -3,8 +3,8 @@ using System.Collections.Generic;
 
 namespace Dorkari.Samples.Cmd.Models
 {
-    //NO! I do NOT write many classes in a file
-    public class SoldierDTO : IEquatable<SoldierDTO>
+    //NO! I do NOT write many classes in a file for real code
+    class SoldierDTO : IEquatable<SoldierDTO>
     {
         public int Id { get; set; }
         public string Name { get; set; }
@@ -17,8 +17,11 @@ namespace Dorkari.Samples.Cmd.Models
         }
     }
 
-    public class Officer
+    class Officer
     {
+        static Officer()
+        {
+        }
         public string Id { get; set; }
         public string Name { get; set; }
         public string BaseGroup { get; set; }

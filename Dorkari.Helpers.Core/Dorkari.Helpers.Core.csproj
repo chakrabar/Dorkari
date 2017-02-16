@@ -44,7 +44,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Extensions\CollectionExtensions.cs" />
+    <Compile Include="Extensions\CollectionComparer.cs" />
+    <Compile Include="Linq\ExtendedLinqs.cs" />
     <Compile Include="Extensions\ObjectExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Utilities\ConfigHelper.cs" />

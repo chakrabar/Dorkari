@@ -14,15 +14,15 @@ namespace Dorkari.Samples.Cmd.Examples
 
             //example with configuration
             var meta = new Poller()
-                        .WithException<ApplicationException>()
+                        .AllowException<ApplicationException>()
                         .WithRetries(5)
                         .WithWait(1500)
                         .Execute(() => TestMeth(1));
 
             //Func example
             var pollResult = new Poller()
-                            .WithException<ArgumentNullException>()
-                            .WithException<DivideByZeroException>()
+                            .AllowException<ArgumentNullException>()
+                            .AllowException<DivideByZeroException>()
                             .WithRetries(3)
                             .WithWait(3000)
                             .Execute(() => GetTestString(1)); //.Result if only interested in the return value

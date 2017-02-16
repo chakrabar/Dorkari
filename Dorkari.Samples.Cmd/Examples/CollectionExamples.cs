@@ -1,4 +1,4 @@
-﻿using Dorkari.Helpers.Core.Extensions;
+﻿using Dorkari.Helpers.Core.Linq;
 using Dorkari.Samples.Cmd.Models;
 using System.Collections.Generic;
 using System.Linq;
