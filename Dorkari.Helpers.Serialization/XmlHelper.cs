@@ -3,7 +3,7 @@ using System.Xml.Serialization;
 
 namespace Dorkari.Helpers.Serialization
 {
-    public class XmlHelper
+    public class XmlHelper : ITextSerializer
     {
         public T DeserializeData<T>(string data)
         {

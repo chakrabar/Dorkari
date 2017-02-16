@@ -4,9 +4,9 @@ using System.IO;
 
 namespace Dorkari.Helpers.Serialization
 {
-    public class ProtoBufHelper
+    public class ProtoBufHelper : IBinarySerializer
     {
-        public static T DeserializeData<T>(byte[] data)
+        public T DeserializeData<T>(byte[] data)
         {
             try
             {
@@ -18,7 +18,7 @@ namespace Dorkari.Helpers.Serialization
             }
         }
 
-        public static T DeserializeData<T>(string filePath)
+        public T DeserializeData<T>(string filePath)
         {
             try
             {
@@ -31,7 +31,7 @@ namespace Dorkari.Helpers.Serialization
             }
         }
 
-        public static bool SerializeData<T>(T data, string filePath)
+        public bool SerializeData<T>(T data, string filePath)
         {
             try
             {
@@ -47,7 +47,7 @@ namespace Dorkari.Helpers.Serialization
             }
         }
 
-        public static byte[] SerializeData<T>(T data)
+        public byte[] SerializeData<T>(T data)
         {
             try
             {

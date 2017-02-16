@@ -4,6 +4,11 @@ using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Reflection;
 
 namespace Dorkari.Helpers.Core.Utilities
 {
@@ -94,25 +99,26 @@ namespace Dorkari.Helpers.Core.Utilities
             return destination;
         }
 
-        public static T CreateInstance<T>()
+        public static T CreateInstance<T>(bool populateConstructorParameters = false)
         {
             var objectType = typeof(T);
-            var instance = CreateInstance(objectType);
+            var instance = CreateInstance(objectType, populateConstructorParameters);
             return (T)instance;
         }
 
-        public static object CreateInstance(Type objectType) //bool populateProperties = false
+        //TODO: this needs more testing, specially populateAllParameters = true
+        public static object CreateInstance(Type objectType, bool populateAllParameters = false)
         {
             var constructors = objectType.GetConstructors(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
 
-            var defaultConstructor = constructors.SingleOrDefault(ctor => ctor.GetParameters().Length == 0);
-            if (defaultConstructor != null)
+            var defaultConstructor = constructors.FirstOrDefault(ctor => ctor.GetParameters().Length == 0); //static, public
+            if (defaultConstructor != null) //there is a parameterless constructor for the type
                 return Activator.CreateInstance(objectType);
 
             var ctorWithMinimumParameters = constructors.MinBy(ctor => ctor.GetParameters().Length);
 
             if (ctorWithMinimumParameters == null)
-                return Default(objectType); //no constructor
+                return Default(objectType); //there is NO constructor for this type
 
             var ctorParameters = ctorWithMinimumParameters.GetParameters();
             var totalCtorParameters = ctorParameters.Length;
@@ -122,33 +128,15 @@ namespace Dorkari.Helpers.Core.Utilities
             for (int i = 0; i < totalCtorParameters; i++)
             {
                 var paramType = ctorParameters[i].ParameterType;
-                //if (populateConstructorParameters) //complexity of Interface type parameters
-                //{
-                //    var thisMethod = typeof(ReflectionHelper)
-                //                    .GetMethod("CreateInstance", BindingFlags.Static)
-                //                    .MakeGenericMethod(paramType);
-                //    ctorArguments[i] = thisMethod.Invoke(null, new object[] { true });
-                //}
-                //else
-                ctorArguments[i] = Default(paramType);
+                ctorArguments[i] = (!populateAllParameters) // || IsSimpleType(paramType)
+                    ? Default(paramType) : CreateInstance(paramType, populateAllParameters);
             }
 
-            //var instance = Activator.CreateInstance(objectType, ctorArguments); //this blows up when there is confusion with parameter types
             var instance = ctorWithMinimumParameters.Invoke(ctorArguments);
             return instance;
         }
 
-        public static object Default(Type type)
-        {
-            Func<object> getDefault = Default<object>;
-            //return getDefault.Method
-            //    .GetGenericMethodDefinition()
-            //    .MakeGenericMethod(type)
-            //    .Invoke(null, null);
-            return InvokeAsGeneric(getDefault, type);
-        }
-
-        private static object InvokeAsGeneric(Func<object> func, Type type)
+        public static object InvokeAsGeneric(Func<object> func, Type type)
         {
             return func.Method
                 .GetGenericMethodDefinition()
@@ -156,9 +144,119 @@ namespace Dorkari.Helpers.Core.Utilities
                 .Invoke(null, null);
         }
 
+        //from http://stackoverflow.com/questions/2442534/how-to-test-if-type-is-primitive >> https://gist.github.com/jonathanconway/3330614
+        public static bool IsSimpleType(Type type)
+        {
+            return
+                type.IsValueType ||
+                type.IsPrimitive ||
+                new Type[] { 
+				    typeof(String),
+				    typeof(Decimal),
+				    typeof(DateTime),
+				    typeof(DateTimeOffset),
+				    typeof(TimeSpan),
+				    typeof(Guid)
+			    }.Contains(type) ||
+                Convert.GetTypeCode(type) != TypeCode.Object;
+        }
+
+        public static object Default(Type type)
+        {
+            if (type.IsPointer)
+                return null;
+            Func<object> getDefault = Default<object>;
+            return InvokeAsGeneric(getDefault, type);
+        }
+
         private static T Default<T>()
         {
             return default(T);
+        }
+
+
+        //TODO: SORT
+        public static Tuple<bool, Type> IsGenericIEnumerable(object obj)
+        {
+            try
+            {
+                if (obj != null || obj.GetType() != typeof(string))
+                {
+                    var type = obj.GetType();
+                    if (type.GetInterfaces()
+                        .Any(i => i.IsGenericType &&
+                            i.GetGenericTypeDefinition() == typeof(IEnumerable<>)))
+                    {
+                        var argType = type.GetGenericArguments()[0];
+                        return new Tuple<bool, Type>(true, argType);
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                //throw;
+            }
+            return new Tuple<bool, Type>(false, null);
+        }
+
+        public static object InvokeMethodFromCodebase(string className, string methodName, object[] input = null)
+        {
+            var type = ReflectionHelper.GetTypeFromCodebase(className);
+            var instance = CreateInstance(type);
+            if (instance != null)
+            {
+                var method = type.GetMethod(methodName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+                if (method != null && !method.IsAbstract)
+                    return method.Invoke(instance, input);
+            }
+            throw new ApplicationException(string.Format("No implemented method: {0} found in type: {1}", methodName, className));
+        }
+
+        public static Type GetTypeFromCodebase(string typeName, SearchOption searchOption = SearchOption.TopDirectoryOnly, string assemblyNamePrefix = "")
+        {
+            var binPath = Assembly.GetExecutingAssembly().CodeBase;
+            string localPath = new Uri(binPath).LocalPath;
+            var directory = new DirectoryInfo(Path.GetDirectoryName(localPath));
+
+            IEnumerable<FileInfo> assembliesToScan = directory.GetFiles("*.dll", searchOption);
+            if (!string.IsNullOrWhiteSpace(assemblyNamePrefix))
+                assembliesToScan = assembliesToScan.Where(a => a.Name.StartsWith(assemblyNamePrefix));
+
+            foreach (var assembly in assembliesToScan)
+            {
+                var loadedAssembly = Assembly.LoadFrom(assembly.FullName);
+                var types = loadedAssembly.GetTypes().Where(t => t.FullName.Equals(typeName));
+
+                if (types.IsNotEmpty())
+                    return types.First();
+            }
+            throw new ApplicationException(string.Format("No implemented type found for: {0}", typeName));
+        }
+
+        private static List<Type> GetAssignableTypesFromCodebase<TBase>(string assemblyNamePrefix = "")
+        {
+            var implementations = new List<Type>();
+
+            var binPath = Assembly.GetExecutingAssembly().CodeBase;
+            string localPath = new Uri(binPath).LocalPath;
+            var directory = new DirectoryInfo(Path.GetDirectoryName(localPath));
+
+            IEnumerable<FileInfo> assembliesToScan = directory.GetFiles("*.dll", SearchOption.TopDirectoryOnly);
+            if (!string.IsNullOrWhiteSpace(assemblyNamePrefix))
+                assembliesToScan = assembliesToScan.Where(a => a.Name.StartsWith(assemblyNamePrefix));
+
+            var registryType = typeof(TBase);
+            foreach (var assembly in assembliesToScan)
+            {
+                var loadedAssembly = Assembly.LoadFrom(assembly.FullName);
+                var implementingTypes = loadedAssembly.GetTypes().Where(type => registryType.IsAssignableFrom(type) && !type.IsInterface);
+
+                if (implementingTypes.IsNotEmpty())
+                {
+                    implementations.AddRange(implementingTypes);
+                }
+            }
+            return implementations;
         }
     }
 }

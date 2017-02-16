@@ -45,6 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Extensions\CollectionComparer.cs" />
+    <Compile Include="Extensions\EnumExtensions.cs" />
     <Compile Include="Linq\ExtendedLinqs.cs" />
     <Compile Include="Extensions\ObjectExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />

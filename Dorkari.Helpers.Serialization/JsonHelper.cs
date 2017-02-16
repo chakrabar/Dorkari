@@ -3,7 +3,7 @@ using JSON = Newtonsoft.Json.JsonConvert;
 
 namespace Dorkari.Helpers.Serialization
 {
-    public class JsonHelper
+    public class JsonHelper : ITextSerializer
     {
         public string SerializeData<T>(T data, bool isMinified = true)
         {

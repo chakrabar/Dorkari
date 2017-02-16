@@ -5,12 +5,12 @@ namespace Dorkari.Samples.Cmd.Examples
 {
     public class ListExamples
     {
-        public void Show()
+        public static void Show()
         {
             HasSubSequenceExample();
         }
 
-        private void HasSubSequenceExample()
+        private static void HasSubSequenceExample()
         {
             var l1 = new List<int> { 1, 2, 3, 4, 5 };
             var l2 = new List<int> { 4, 5 };

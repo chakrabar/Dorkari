@@ -30,8 +30,8 @@ namespace Dorkari.Samples.Cmd.Examples
         private static void ShowObjectCreation()
         {
             var objWithNoCtor = ReflectionHelper.CreateInstance<SoldierDTO>();
-            var objWithStaticCtor = ReflectionHelper.CreateInstance<Officer>(); //
-            var objWithComplexCtor = ReflectionHelper.CreateInstance<CourseDomainModel>();
+            var objWithStaticCtor = ReflectionHelper.CreateInstance<Officer>();
+            var objWithComplexCtor = ReflectionHelper.CreateInstance<CourseDomainModel>(true); //populate constructor arguments
             var objWithInterfaceParameter = ReflectionHelper.CreateInstance<TutorDomainModel>();
             var objListOfPrimitive = ReflectionHelper.CreateInstance<List<string>>();
             var objListOfComplex = ReflectionHelper.CreateInstance<List<SoldierDTO>>();

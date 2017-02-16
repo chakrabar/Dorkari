@@ -10,7 +10,7 @@ namespace Dorkari.Samples.Cmd.Fun
         static int iCommon = 0;
         static int jCommon = 0;
 
-        public static void Start()
+        public static void Show()
         {
             Task a = Task.Run(() =>
             {

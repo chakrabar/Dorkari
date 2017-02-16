@@ -9,9 +9,11 @@ namespace Dorkari.Samples.Cmd
         {
             try
             {
-                //CollectionExamples.Show();
-                //PollerExample.Show();
+                CollectionExamples.Show();
+                ListExamples.Show();
+                PollerExample.Show();
                 ReflectionExamples.Show();
+                StringExamples.Show();
             }
             catch (Exception ex)
             {
