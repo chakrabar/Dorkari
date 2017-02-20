@@ -143,6 +143,6 @@ namespace Dorkari.Helpers.Core.Extensions
                     return true;
             }
             return false;
-        }        
+        }
     }
 }

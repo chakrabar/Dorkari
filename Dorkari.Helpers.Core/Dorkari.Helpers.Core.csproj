@@ -51,6 +51,7 @@
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Utilities\ConfigHelper.cs" />
     <Compile Include="Utilities\DynamicHelper.cs" />
+    <Compile Include="Utilities\ExceptionHelper.cs" />
     <Compile Include="Utilities\GenericHelper.cs" />
     <Compile Include="Utilities\ReflectionHelper.cs" />
     <Compile Include="Utilities\Poller.cs" />

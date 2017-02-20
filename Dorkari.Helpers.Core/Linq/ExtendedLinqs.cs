@@ -170,6 +170,22 @@ namespace Dorkari.Helpers.Core.Linq
                 }
             }
             return result;
-        }        
+        }
+
+        public static IEnumerable<T> Merge<T>(IEnumerable<T> first, IEnumerable<T> second)
+        {
+            if (first == null && second == null)
+                return null;
+            if (first == null)
+                return second;
+            if (second == null)
+                return first;
+
+            var list = new List<T>();
+            list.AddRange(first);
+            list.AddRange(second);
+
+            return list.AsEnumerable();
+        }
     }
 }

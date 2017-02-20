@@ -245,11 +245,11 @@ namespace Dorkari.Helpers.Core.Utilities
             if (!string.IsNullOrWhiteSpace(assemblyNamePrefix))
                 assembliesToScan = assembliesToScan.Where(a => a.Name.StartsWith(assemblyNamePrefix));
 
-            var registryType = typeof(TBase);
+            var baseType = typeof(TBase);
             foreach (var assembly in assembliesToScan)
             {
                 var loadedAssembly = Assembly.LoadFrom(assembly.FullName);
-                var implementingTypes = loadedAssembly.GetTypes().Where(type => registryType.IsAssignableFrom(type) && !type.IsInterface);
+                var implementingTypes = loadedAssembly.GetTypes().Where(type => baseType.IsAssignableFrom(type) && !type.IsInterface);
 
                 if (implementingTypes.IsNotEmpty())
                 {

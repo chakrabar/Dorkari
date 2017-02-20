@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Xml.Linq;
 
 namespace Dorkari.Helpers.Files
 {
+    //TODO: 18-feb needs a clean-up //then generic logger 19-feb
     public class FileHelper
     {
         static object locker = new object();
@@ -16,6 +18,53 @@ namespace Dorkari.Helpers.Files
             var filePath = directory + GetFileNameWithTimeStamp(fileName, fileExtension);
             File.AppendAllText(filePath, data);
             return filePath;
+        }
+
+        public static string WriteToXml(XDocument xDoc, string directory, string fileName)
+        {
+            try
+            {
+                if (!Directory.Exists(directory) || string.IsNullOrEmpty(fileName))
+                    throw new DirectoryNotFoundException(string.Format("Directory not found : {0} or filename is empty", directory));
+
+                var filePath = GetFullPath(directory, fileName); //Path.Combine(directory, fileName);
+                xDoc.Save(filePath);
+                return filePath;
+            }
+            catch (Exception ex)
+            {
+                //log
+                return ex.Message;
+            }
+        }
+
+        public static string ReadFile(string filePath)
+        {
+            try
+            {
+                if (!File.Exists(filePath))
+                    throw new FileNotFoundException(string.Format("File not found : {0}", filePath));
+                return File.ReadAllText(filePath);
+            }
+            catch (Exception ex)
+            {
+                //log
+                return ex.Message;
+            }
+        }
+
+        public static byte[] ReadFileAsBytes(string filePath)
+        {
+            if (!File.Exists(filePath))
+                throw new FileNotFoundException(string.Format("File not found : {0}", filePath));
+            return File.ReadAllBytes(filePath);
+        }
+
+        public static FileInfo[] GetFiles(DirectoryInfo directory, string pattern)
+        {
+            if (directory != null && !string.IsNullOrEmpty(pattern))
+                return directory.GetFiles(pattern);
+            return null;
         }
 
         public static string GetUserDirectory()
@@ -54,18 +103,23 @@ namespace Dorkari.Helpers.Files
             }
         }
 
-        public static void DeleteFilesAndFoldersRecursively(string directoryPath)
+        public static void DeleteDirectorySafely(string directoryPath)
         {
-            foreach (string fil in Directory.GetFiles(directoryPath))
+            if (!Directory.Exists(directoryPath))
+                return;
+
+            foreach (string file in Directory.GetFiles(directoryPath))
             {
                 System.Threading.Thread.Sleep(1);
-                File.Delete(fil);
+                File.Delete(file);
             }
-            foreach (string subDrt in Directory.GetDirectories(directoryPath))
+
+            foreach (string subDir in Directory.GetDirectories(directoryPath))
             {
-                DeleteFilesAndFoldersRecursively(subDrt);
+                DeleteDirectorySafely(subDir);
             }
-            System.Threading.Thread.Sleep(2); //Sleep(0) is not enough. This increases chance of successful delete
+
+            System.Threading.Thread.Sleep(2); // This makes the difference for slow/erroneous directories
             Directory.Delete(directoryPath);
         }
 
@@ -90,7 +144,7 @@ namespace Dorkari.Helpers.Files
         public static string GetFileSearchPattern(string fileNamePart, string extension = "xml")
         {
             if (!string.IsNullOrEmpty(fileNamePart))
-                return "*" + fileNamePart.Trim() + "*." + extension;
+                return string.Format("*{0}*.{1}", fileNamePart.Trim(), extension);
             return string.Empty;
         }
 
@@ -99,6 +153,13 @@ namespace Dorkari.Helpers.Files
             var file = string.IsNullOrEmpty(fileName) ? @"\DorkariFile_" : @"\" + fileName + "_";
             file = file + DateTime.Now.ToString("yyyyMMMMdd") + "_" + DateTime.Now.ToString("HH.mm.ss.ffffff");
             return isDirectory ? file : file + "." + (string.IsNullOrEmpty(extension) ? "txt" : extension);
+        }
+
+        public static string GetFileNameWithTimeStampWithoutSlash(string fileName, string fileExtension)
+        {
+            var file = string.Format(@"{0}_", string.IsNullOrEmpty(fileName) ? "DorkariFile_" : fileName);
+            file = string.Format("{0}{1}_{2}", file, DateTime.Now.ToString("yyyyMMMMdd"), DateTime.Now.ToString("HH.mm.ss.ffffff"));
+            return string.Format("{0}.{1}", file, string.IsNullOrEmpty(fileExtension) ? "txt" : fileExtension);
         }
 
         public static string GetSingleDirectoryWithFiles(string rootDirectory)
@@ -117,6 +178,16 @@ namespace Dorkari.Helpers.Files
                     throw new Exception("Extracted directory was empty!"); //no files found after extrcting a given zip file.
             }
             return directoryName;
+        }
+
+        public static string CreateNewTempDirectory()
+        {
+            var tempDirectory = GetTemporaryDirectory();
+
+            if (Directory.Exists(tempDirectory))
+                Directory.Delete(tempDirectory, true);
+
+            return tempDirectory;
         }
 
         #region PrivateMethods
