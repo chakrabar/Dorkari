@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Xml.Linq;
 
-namespace Dorkari.Helpers.Core.Utilities
+namespace Dorkari.Helpers.Core.Xml
 {
     public class XmlHelper
     {
