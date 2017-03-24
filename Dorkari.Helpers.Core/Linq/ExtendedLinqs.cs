@@ -172,6 +172,7 @@ namespace Dorkari.Helpers.Core.Linq
             return result;
         }
 
+        //TODO: match style
         public static IEnumerable<T> Merge<T>(IEnumerable<T> first, IEnumerable<T> second)
         {
             if (first == null && second == null)

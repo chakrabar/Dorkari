@@ -31,9 +31,14 @@ namespace Dorkari.Helpers.Core.Utilities
             return System.Text.RegularExpressions.Regex.Unescape(value);
         }
 
+        public static bool AreEqual(string str, string match, StringComparison compareType = StringComparison.InvariantCultureIgnoreCase)
+        {
+            return (str == null && match == null) || str.Equals(match, compareType);
+        }
+
         public static bool AreNonNullEqual(string str, string match, StringComparison compareType = StringComparison.InvariantCultureIgnoreCase)
         {
-            return !string.IsNullOrWhiteSpace(str) && !string.IsNullOrWhiteSpace(match) && str.Trim().Equals(match.Trim(), compareType);
+            return str != null && match != null && str.Equals(match, compareType);
         }
 
         public static bool AreEqualWithoutSpace(string str, string match, StringComparison compareType = StringComparison.InvariantCultureIgnoreCase)
