@@ -148,6 +148,13 @@ namespace Dorkari.Helpers.Files
             return string.Empty;
         }
 
+        public static string GetFileNameWithDate(string fileName, string fileExtension, bool isDirectory = false)
+        {
+            var file = string.Format(@"\{0}", string.IsNullOrEmpty(fileName) ? "ArgonDataFile" : fileName);
+            file = string.Format("{0}_{1}", file, DateTime.Now.ToString("yyyyMMMMdd"));
+            return isDirectory ? file : string.Format("{0}.{1}", file, string.IsNullOrEmpty(fileExtension) ? "txt" : fileExtension);
+        }
+
         public static string GetFileNameWithTimeStamp(string fileName, string extension, bool isDirectory = false) //TODO: improve
         {
             var file = string.IsNullOrEmpty(fileName) ? @"\DorkariFile_" : @"\" + fileName + "_";
