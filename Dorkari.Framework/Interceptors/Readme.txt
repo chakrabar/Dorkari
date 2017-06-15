@@ -1,6 +1,6 @@
 ﻿1. Adding Unity interceptors as policies
 
-- Add Unity NuGet to the project
+- Add Unity Interception NuGet to the project
 - Add to the method UnityResolverBuilder.RegisterPolicies()
 - Example
 container.Configure<Interception>()
@@ -15,7 +15,7 @@ container.Configure<Interception>()
 
 2. Adding to individual entities
 
-- Add Unity NuGet to the project
+- Add Unity Interception NuGet to the project
 - Add [LogException(1)] attribute to required method (1 is order of interceptor in pipeline)
 
 ** For either case, target interfaces has to register themselves with (allowPolicyInjection = true)
