@@ -1,5 +1,6 @@
 ﻿using ProtoBuf;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -48,7 +49,8 @@ namespace Dorkari.Framework.Web.MediaTypeFormatters
 			    }.Contains(type))
                 return true;
             Type targetType = type;
-            if (type.GetType().GetInterfaces().Any(t => t.IsGenericType == true && t.GetGenericTypeDefinition() == typeof(IEnumerable<>)))
+            if ((typeof(IEnumerable).IsAssignableFrom(type) && type.IsGenericType) //is IEnumerable<t>
+                || type.GetType().GetInterfaces().Any(t => t.IsGenericType == true && t.GetGenericTypeDefinition() == typeof(IEnumerable<>))) //is derived from IEnumerable<T>
             {
                 targetType = type.GetGenericArguments()[0];
             }
