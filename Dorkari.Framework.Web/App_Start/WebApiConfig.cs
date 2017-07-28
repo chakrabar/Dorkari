@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Serialization;
+﻿using Dorkari.Framework.Web.MediaTypeFormatters;
+using Newtonsoft.Json.Serialization;
 using System.Net.Http.Formatting;
 using System.Web.Http;
 using System.Web.Http.Routing;
@@ -10,6 +11,7 @@ namespace Dorkari.Framework.Web
         public static void Register(HttpConfiguration config)
         {
             // Web API configuration and services            
+            config.Formatters.Add(new ProtobufMediaTypeFormatter());  //support for Accept: "application/protobuf"
 
             // Web API routes
             config.MapHttpAttributeRoutes();
