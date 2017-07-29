@@ -1,4 +1,6 @@
-﻿using Dorkari.Framework.Web.TestUtils;
+﻿using Dorkari.Framework.Web.Communicators;
+using Dorkari.Framework.Web.Models.Enums;
+using Dorkari.Framework.Web.TestUtils;
 using System;
 using System.Collections.Generic;
 using System.Web.Http;
@@ -20,8 +22,9 @@ namespace Dorkari.Framework.Web.Controllers
         }
 
         // ../api/test?name=hombre
-        public string Get(string name)
+        public string Get(string name, MediaType format)
         {
+            var robots = RestClient.Get<IEnumerable<Robot>>("http://localhost:55290/api/test", format);
             return "Hi " + name;
         }
     }
