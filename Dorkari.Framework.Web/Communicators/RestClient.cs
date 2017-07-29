@@ -12,6 +12,10 @@ namespace Dorkari.Framework.Web.Communicators
 {
     public static class RestClient
     {
+        static readonly JsonMediaTypeFormatter _jsonFormatter = new JsonMediaTypeFormatter();
+        static readonly XmlMediaTypeFormatter _xmlFormatter = new XmlMediaTypeFormatter();
+        static readonly ProtobufMediaTypeFormatter _protobufFormatter = new ProtobufMediaTypeFormatter();
+
         public static TResult Get<TResult>(string uri, MediaType acceptType = MediaType.JSON, Dictionary<string, string> parameters = null, Dictionary<string, string> headers = null)
         {
             if (parameters != null)
@@ -49,13 +53,13 @@ namespace Dorkari.Framework.Web.Communicators
             switch (format)
             {
                 case MediaType.JSON:
-                    yield return new JsonMediaTypeFormatter();
+                    yield return _jsonFormatter;
                     break;
                 case MediaType.XML:
-                    yield return new XmlMediaTypeFormatter();
+                    yield return _xmlFormatter;
                     break;
                 case MediaType.ProtoBuf:
-                    yield return new ProtobufMediaTypeFormatter();
+                    yield return _protobufFormatter;
                     break;
             }
         }

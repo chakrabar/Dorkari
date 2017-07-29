@@ -48,6 +48,7 @@ namespace Dorkari.Framework.Web.MediaTypeFormatters
 				    typeof(Guid)
 			    }.Contains(type))
                 return true;
+            
             Type targetType = type;
             if ((typeof(IEnumerable).IsAssignableFrom(type) && type.IsGenericType) //is IEnumerable<t>
                 || type.GetType().GetInterfaces().Any(t => t.IsGenericType == true && t.GetGenericTypeDefinition() == typeof(IEnumerable<>))) //is derived from IEnumerable<T>

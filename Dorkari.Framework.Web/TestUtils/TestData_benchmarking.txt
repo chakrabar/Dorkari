@@ -40,3 +40,5 @@ Test results - HTTP media types (in identical test setup, with ~3k small objects
 XML - Content length: 249441, Average time: 76.9 milliseconds
 JSON - Content length: 173281 (69.47%), Average time: 106.1 milliseconds (137.97%)
 ProtoBuf - Content length: 54720 (21.94%), Average time: 68 milliseconds (88.43%)
+
+Note: This method instantiates a new formatter every time.
