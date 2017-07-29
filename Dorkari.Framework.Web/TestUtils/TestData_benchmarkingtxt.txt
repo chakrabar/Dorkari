@@ -1,0 +1,42 @@
+﻿JSON:
+"Hi ac, your request with Type: JSON took 106 milliseconds, content length: 173281"
+"Hi ac, your request with Type: JSON took 115 milliseconds, content length: 173281"
+"Hi ac, your request with Type: JSON took 112 milliseconds, content length: 173281"
+"Hi ac, your request with Type: JSON took 117 milliseconds, content length: 173281"
+"Hi ac, your request with Type: JSON took 102 milliseconds, content length: 173281"
+"Hi ac, your request with Type: JSON took 94 milliseconds, content length: 173281"
+"Hi ac, your request with Type: JSON took 104 milliseconds, content length: 173281"
+"Hi ac, your request with Type: JSON took 94 milliseconds, content length: 173281"
+"Hi ac, your request with Type: JSON took 105 milliseconds, content length: 173281"
+"Hi ac, your request with Type: JSON took 112 milliseconds, content length: 173281"
+
+XML:
+"Hi ac, your request with Type: XML took 95 milliseconds, content length: 249441"
+"Hi ac, your request with Type: XML took 65 milliseconds, content length: 249441"
+"Hi ac, your request with Type: XML took 80 milliseconds, content length: 249441"
+"Hi ac, your request with Type: XML took 74 milliseconds, content length: 249441"
+"Hi ac, your request with Type: XML took 62 milliseconds, content length: 249441"
+"Hi ac, your request with Type: XML took 81 milliseconds, content length: 249441"
+"Hi ac, your request with Type: XML took 61 milliseconds, content length: 249441"
+"Hi ac, your request with Type: XML took 77 milliseconds, content length: 249441"
+"Hi ac, your request with Type: XML took 103 milliseconds, content length: 249441"
+"Hi ac, your request with Type: XML took 71 milliseconds, content length: 249441"
+
+ProtoBuf:
+"Hi ac, your request with Type: ProtoBuf took 79 milliseconds, content length: 54720"
+"Hi ac, your request with Type: ProtoBuf took 70 milliseconds, content length: 54720"
+"Hi ac, your request with Type: ProtoBuf took 58 milliseconds, content length: 54720"
+"Hi ac, your request with Type: ProtoBuf took 61 milliseconds, content length: 54720"
+"Hi ac, your request with Type: ProtoBuf took 78 milliseconds, content length: 54720"
+"Hi ac, your request with Type: ProtoBuf took 58 milliseconds, content length: 54720"
+"Hi ac, your request with Type: ProtoBuf took 83 milliseconds, content length: 54720"
+"Hi ac, your request with Type: ProtoBuf took 64 milliseconds, content length: 54720"
+"Hi ac, your request with Type: ProtoBuf took 71 milliseconds, content length: 54720"
+"Hi ac, your request with Type: ProtoBuf took 58 milliseconds, content length: 54720"
+
+=================================================================================
+Test results - HTTP media types (in identical test setup, with ~3k small objects)
+=================================================================================
+XML - Content length: 249441, Average time: 76.9 milliseconds
+JSON - Content length: 173281 (69.47%), Average time: 106.1 milliseconds (137.97%)
+ProtoBuf - Content length: 54720 (21.94%), Average time: 68 milliseconds (88.43%)

@@ -1,8 +1,8 @@
 ﻿using Dorkari.Framework.Web.Communicators;
 using Dorkari.Framework.Web.Models.Enums;
 using Dorkari.Framework.Web.TestUtils;
-using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Web.Http;
 
 namespace Dorkari.Framework.Web.Controllers
@@ -21,11 +21,16 @@ namespace Dorkari.Framework.Web.Controllers
             return new Human { Name = "Arghya C", Age = 30 };
         }
 
-        // ../api/test?name=hombre
+        // ../api/test?name=hombre&format=xml
         public string Get(string name, MediaType format)
         {
-            var robots = RestClient.Get<IEnumerable<Robot>>("http://localhost:55290/api/test", format);
-            return "Hi " + name;
+            var currentBaseUri = Request.RequestUri.GetLeftPart(System.UriPartial.Authority);
+            Stopwatch watch = new Stopwatch();
+            watch.Start();
+            var result = RestClient.Get<IEnumerable<Robot>>(currentBaseUri + "/api/test", format);
+            watch.Stop();
+            var milliSecondsTaken = watch.ElapsedMilliseconds;
+            return string.Format("Hi {0}, your request with Type: {1} took {2} milliseconds, content length: {3}", name, format, milliSecondsTaken, "XX");
         }
     }
 }

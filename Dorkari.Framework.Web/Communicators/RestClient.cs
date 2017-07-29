@@ -12,17 +12,6 @@ namespace Dorkari.Framework.Web.Communicators
 {
     public static class RestClient
     {
-        static IEnumerable<MediaTypeFormatter> _formatters;
-
-        static RestClient()
-        {
-            _formatters = new List<MediaTypeFormatter>() { 
-                new JsonMediaTypeFormatter(), 
-                new XmlMediaTypeFormatter(),
-                new ProtobufMediaTypeFormatter()
-            };
-        }
-
         public static TResult Get<TResult>(string uri, MediaType acceptType = MediaType.JSON, Dictionary<string, string> parameters = null, Dictionary<string, string> headers = null)
         {
             if (parameters != null)
@@ -45,13 +34,30 @@ namespace Dorkari.Framework.Web.Communicators
                 
                 using (HttpResponseMessage response = client.GetAsync(uri).Result)
                 {
+                    //var contentLength = response.Content.Headers.ContentLength; //TODO: for test only
                     if (response.IsSuccessStatusCode)
                     {
-                        return response.Content.ReadAsAsync<TResult>(_formatters).Result;
+                        return response.Content.ReadAsAsync<TResult>(GetFormatters(acceptType)).Result;
                     }
                     throw new Exception(string.Format("GET call failed to {0}. Http code: {1}, Reason: {2}", uri, response.StatusCode, response.ReasonPhrase));
                 }
             }            
+        }
+
+        private static IEnumerable<MediaTypeFormatter> GetFormatters(MediaType format)
+        {
+            switch (format)
+            {
+                case MediaType.JSON:
+                    yield return new JsonMediaTypeFormatter();
+                    break;
+                case MediaType.XML:
+                    yield return new XmlMediaTypeFormatter();
+                    break;
+                case MediaType.ProtoBuf:
+                    yield return new ProtobufMediaTypeFormatter();
+                    break;
+            }
         }
 
         //TODO: needs more work
@@ -63,7 +69,7 @@ namespace Dorkari.Framework.Web.Communicators
                 response.EnsureSuccessStatusCode();
                 if (response.IsSuccessStatusCode)
                 {
-                    return response.Content.ReadAsAsync<TResult>(_formatters).Result;
+                    return response.Content.ReadAsAsync<TResult>(GetFormatters(MediaType.JSON)).Result;
                 }
                 return default(TResult);
             }          
@@ -77,7 +83,7 @@ namespace Dorkari.Framework.Web.Communicators
             {
                 if (response.IsSuccessStatusCode)
                 {
-                    return response.Content.ReadAsAsync<T>(_formatters).Result;
+                    return response.Content.ReadAsAsync<T>(GetFormatters(MediaType.JSON)).Result;
                 }
                 return default(T);
             }
@@ -90,7 +96,7 @@ namespace Dorkari.Framework.Web.Communicators
             {
                 if (response.IsSuccessStatusCode)
                 {
-                    return response.Content.ReadAsAsync<T>(_formatters).Result;
+                    return response.Content.ReadAsAsync<T>(GetFormatters(MediaType.JSON)).Result;
                 }
                 return default(T);
             }

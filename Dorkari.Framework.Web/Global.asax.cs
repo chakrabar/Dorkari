@@ -7,6 +7,7 @@ using System.Web.Routing;
 using System.Web.Security;
 using System.Web.SessionState;
 using System.Web.Http;
+using Dorkari.Framework.Web.TestUtils;
 
 namespace Dorkari.Framework.Web
 {
@@ -17,7 +18,9 @@ namespace Dorkari.Framework.Web
             // Code that runs on application startup
             AreaRegistration.RegisterAllAreas();
             GlobalConfiguration.Configure(WebApiConfig.Register);
-            RouteConfig.RegisterRoutes(RouteTable.Routes);            
+            RouteConfig.RegisterRoutes(RouteTable.Routes);
+            //TODO: remove - Test Data initialization
+            var robots = TestData.GetRobots();
         }
     }
 }

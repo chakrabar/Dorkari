@@ -98,6 +98,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Global.asax" />
+    <Content Include="TestUtils\TestData_benchmarkingtxt.txt" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
