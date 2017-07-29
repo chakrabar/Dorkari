@@ -103,12 +103,16 @@
   <ItemGroup>
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Communicators\RestClient.cs" />
     <Compile Include="Controllers\TestController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="MediaTypeFormatters\ProtobufMediaTypeFormatter.cs" />
+    <Compile Include="Models\Enums\MediaType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TestUtils\TestData.cs" />
+    <Compile Include="TestUtils\TestModels.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\web.config" />
@@ -122,7 +126,12 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Models\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Dorkari.Helpers.Core\Dorkari.Helpers.Core.csproj">
+      <Project>{a6e88ab8-bab0-411c-a814-cbbf6b5a0799}</Project>
+      <Name>Dorkari.Helpers.Core</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

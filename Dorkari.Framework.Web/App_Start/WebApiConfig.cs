@@ -32,7 +32,7 @@ namespace Dorkari.Framework.Web
 
             //config.Formatters.JsonFormatter.MediaTypeMappings.Add(new QueryStringMapping("format", "json", "application/json"));
             //config.Formatters.XmlFormatter.MediaTypeMappings.Add(new QueryStringMapping("format", "xml", "application/xml"));
-            //config.Formatters.XmlFormatter.UseXmlSerializer = true;
+            //config.Formatters.XmlFormatter.UseXmlSerializer = true; //NOTE: all return types must have parameter-less constructor
             //config.Formatters.JsonFormatter.SerializerSettings.ContractResolver = new DefaultContractResolver();
 
             //var json = config.Formatters.JsonFormatter;
