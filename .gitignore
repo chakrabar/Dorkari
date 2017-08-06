@@ -4,7 +4,8 @@
 **/obj/**
 packages/
 *.v12.suo
-
+# Visual Studio 2015+ cache/options directory
+.vs/
 # =========================
 # Git AutoCreated ignores v
 # =========================
