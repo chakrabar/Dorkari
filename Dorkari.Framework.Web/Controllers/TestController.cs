@@ -24,13 +24,13 @@ namespace Dorkari.Framework.Web.Controllers
         // ../api/test?name=hombre&format=xml
         public string Get(string name, MediaType format)
         {
-            var currentBaseUri = Request.RequestUri.GetLeftPart(System.UriPartial.Authority);
+            var currentBaseUri = "http://localhost/DorkariWeb"; //Request.RequestUri.GetLeftPart(System.UriPartial.Authority);
             Stopwatch watch = new Stopwatch();
             watch.Start();
             var result = RestClient.Get<IEnumerable<Robot>>(currentBaseUri + "/api/test", format);
             watch.Stop();
             var milliSecondsTaken = watch.ElapsedMilliseconds;
-            return string.Format("Hi {0}, your request with Type: {1} took {2} milliseconds, content length: {3}", name, format, milliSecondsTaken, "XX");
+            return string.Format("Hi {0}, your request with Type: {1} took {2} milliseconds, content length: {3}", name, format, milliSecondsTaken, "XXX");
         }
     }
 }

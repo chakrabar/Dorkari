@@ -58,10 +58,11 @@ namespace Dorkari.Framework.Web.MediaTypeFormatters
             return Attribute.GetCustomAttribute(targetType, typeof(ProtoContractAttribute)) != null;
         }
 
-        #region for_MediaTypeFormatter
-        //protected override Task WriteToStreamAsync(Type type, object value, Stream writeStream, HttpContent content, TransportContext transportContext)
+        #region for_BufferedMediaTypeFormatter
+
+        //public override Task WriteToStreamAsync(Type type, object value, Stream writeStream, HttpContent content, TransportContext transportContext)
         //{
-        //    var task = Task.Factory.StartNew(() =>
+        //    var task = Task.Run(() =>
         //    {
         //        Serializer.Serialize(writeStream, value);
         //        writeStream.Flush(); //TODO: verify
@@ -72,13 +73,14 @@ namespace Dorkari.Framework.Web.MediaTypeFormatters
 
         //public override Task<object> ReadFromStreamAsync(Type type, Stream readStream, HttpContent content, IFormatterLogger formatterLogger)
         //{
-        //    var task = Task<object>.Factory.StartNew(() =>
+        //    var task = Task<object>.Run(() =>
         //    {
         //        return Serializer.NonGeneric.Deserialize(type, readStream);
         //    });
 
         //    return task;
         //}
+        
         #endregion
     }
 }
