@@ -16,12 +16,12 @@ namespace Dorkari.Framework.Web.Communicators
         static readonly XmlMediaTypeFormatter _xmlFormatter = new XmlMediaTypeFormatter();
         static readonly ProtobufMediaTypeFormatter _protobufFormatter = new ProtobufMediaTypeFormatter();
 
-        public static TResult Get<TResult>(string uri, MediaType acceptType = MediaType.JSON, Dictionary<string, string> parameters = null, Dictionary<string, string> headers = null)
+        public static TResult Get<TResult>(string uri, MediaType acceptType = MediaType.JSON, Dictionary<string, string> queryParams = null, Dictionary<string, string> headers = null)
         {
-            if (parameters != null)
+            if (queryParams != null)
             {
                 uri += uri.Contains("?") ? "&" : "?";
-                uri += string.Join("&", parameters.Select(queryParam => queryParam.Key + "=" + queryParam.Value));
+                uri += string.Join("&", queryParams.Select(queryParam => queryParam.Key + "=" + queryParam.Value));
             }
             using (HttpClient client = new HttpClient())
             {
@@ -41,68 +41,161 @@ namespace Dorkari.Framework.Web.Communicators
                     //var contentLength = response.Content.Headers.ContentLength; //TODO: for test only
                     if (response.IsSuccessStatusCode)
                     {
-                        return response.Content.ReadAsAsync<TResult>(GetFormatters(acceptType)).Result;
+                        return response.Content.ReadAsAsync<TResult>(GetFormatterAsEnumerable(acceptType)).Result;
                     }
                     throw new Exception(string.Format("GET call failed to {0}. Http code: {1}, Reason: {2}", uri, response.StatusCode, response.ReasonPhrase));
                 }
-            }            
+            }
         }
 
-        private static IEnumerable<MediaTypeFormatter> GetFormatters(MediaType format)
+        private static MediaTypeFormatter GetFormatter(MediaType format)
         {
             switch (format)
             {
                 case MediaType.JSON:
-                    yield return _jsonFormatter;
-                    break;
+                    return _jsonFormatter;
                 case MediaType.XML:
-                    yield return _xmlFormatter;
-                    break;
+                    return _xmlFormatter;
                 case MediaType.ProtoBuf:
-                    yield return _protobufFormatter;
-                    break;
+                    return _protobufFormatter;
+                default:
+                    return _jsonFormatter;
             }
+        }
+
+        private static IEnumerable<MediaTypeFormatter> GetFormatterAsEnumerable(MediaType format)
+        {
+            yield return GetFormatter(format);
         }
 
         //TODO: needs more work
-        public static TResult Post<TData, TResult>(string url, TData data)
+        public static TResult Post<TData, TResult>(string uri, TData postData, MediaType contentType = MediaType.JSON, 
+            MediaType acceptType = MediaType.JSON, Dictionary<string, string> queryParams = null, Dictionary<string, string> headers = null)
         {
-            using (HttpClient client = new HttpClient())
-            using (HttpResponseMessage response = client.PostAsJsonAsync(url, data).Result)
+            if (queryParams != null)
             {
-                response.EnsureSuccessStatusCode();
-                if (response.IsSuccessStatusCode)
-                {
-                    return response.Content.ReadAsAsync<TResult>(GetFormatters(MediaType.JSON)).Result;
-                }
-                return default(TResult);
-            }          
-        }
+                uri += uri.Contains("?") ? "&" : "?";
+                uri += string.Join("&", queryParams.Select(queryParam => queryParam.Key + "=" + queryParam.Value));
+            }
 
-
-        public static T Delete<T>(string url)
-        {
             using (HttpClient client = new HttpClient())
-            using (HttpResponseMessage response = client.DeleteAsync(url).Result)
             {
-                if (response.IsSuccessStatusCode)
+                client.DefaultRequestHeaders.Accept.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(acceptType.GetEnumAttribute<AcceptHeaderAttribute>().Value));
+
+                if (headers != null)
                 {
-                    return response.Content.ReadAsAsync<T>(GetFormatters(MediaType.JSON)).Result;
+                    foreach (var header in headers)
+                    {
+                        client.DefaultRequestHeaders.Add(header.Key, header.Value);
+                    }
                 }
-                return default(T);
+
+                using (HttpResponseMessage response = client.PostAsync(uri, postData, GetFormatter(contentType)).Result) //(HttpResponseMessage response = client.PostAsJsonAsync(url, data).Result)
+                {
+                    if (response.IsSuccessStatusCode)
+                    {
+                        return response.Content.ReadAsAsync<TResult>(GetFormatterAsEnumerable(acceptType)).Result;
+                    }
+                    throw new Exception(string.Format("POST call failed to {0}. Http code: {1}, Reason: {2}", uri, response.StatusCode, response.ReasonPhrase));
+                }
             }
         }
 
-        public static T Put<T, Y>(string url, Y data)
+        public static TResult Put<TData, TResult>(string uri, TData postData, MediaType contentType = MediaType.JSON,
+            MediaType acceptType = MediaType.JSON, Dictionary<string, string> queryParams = null, Dictionary<string, string> headers = null)
         {
-            using (HttpClient client = new HttpClient())
-            using (HttpResponseMessage response = client.PutAsJsonAsync(url, data).Result)
+            if (queryParams != null)
             {
-                if (response.IsSuccessStatusCode)
+                uri += uri.Contains("?") ? "&" : "?";
+                uri += string.Join("&", queryParams.Select(queryParam => queryParam.Key + "=" + queryParam.Value));
+            }
+
+            using (HttpClient client = new HttpClient())
+            {
+                client.DefaultRequestHeaders.Accept.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(acceptType.GetEnumAttribute<AcceptHeaderAttribute>().Value));
+
+                if (headers != null)
                 {
-                    return response.Content.ReadAsAsync<T>(GetFormatters(MediaType.JSON)).Result;
+                    foreach (var header in headers)
+                    {
+                        client.DefaultRequestHeaders.Add(header.Key, header.Value);
+                    }
                 }
-                return default(T);
+
+                using (HttpResponseMessage response = client.PutAsync(uri, postData, GetFormatter(contentType)).Result) //(HttpResponseMessage response = client.PostAsJsonAsync(url, data).Result)
+                {
+                    if (response.IsSuccessStatusCode)
+                    {
+                        return response.Content.ReadAsAsync<TResult>(GetFormatterAsEnumerable(acceptType)).Result;
+                    }
+                    throw new Exception(string.Format("PUT call failed to {0}. Http code: {1}, Reason: {2}", uri, response.StatusCode, response.ReasonPhrase));
+                }
+            }
+        }
+
+        public static TResult Delete<TResult>(string uri, MediaType acceptType = MediaType.JSON, Dictionary<string, string> queryParams = null, Dictionary<string, string> headers = null)
+        {
+            if (queryParams != null)
+            {
+                uri += uri.Contains("?") ? "&" : "?";
+                uri += string.Join("&", queryParams.Select(queryParam => queryParam.Key + "=" + queryParam.Value));
+            }
+            using (HttpClient client = new HttpClient())
+            {
+                client.DefaultRequestHeaders.Accept.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(acceptType.GetEnumAttribute<AcceptHeaderAttribute>().Value));
+
+                if (headers != null)
+                {
+                    foreach (var header in headers)
+                    {
+                        client.DefaultRequestHeaders.Add(header.Key, header.Value);
+                    }
+                }
+
+                using (HttpResponseMessage response = client.DeleteAsync(uri).Result) //(HttpResponseMessage response = client.PostAsJsonAsync(url, data).Result)
+                {
+                    if (response.IsSuccessStatusCode)
+                    {
+                        return response.Content.ReadAsAsync<TResult>(GetFormatterAsEnumerable(acceptType)).Result;
+                    }
+                    throw new Exception(string.Format("DELETE call failed to {0}. Http code: {1}, Reason: {2}", uri, response.StatusCode, response.ReasonPhrase));
+                }
+            }
+        }
+
+        public static TResult ExecuteHttp<TResult>(string uri, MediaType acceptType = MediaType.JSON, Dictionary<string, string> queryParams = null, Dictionary<string, string> headers = null)
+        {
+            //Func<HttpClient, HttpResponseMessage> httpCall = httpClient => httpClient.DeleteAsync(uri).Result;
+            //=============================
+            if (queryParams != null)
+            {
+                uri += uri.Contains("?") ? "&" : "?";
+                uri += string.Join("&", queryParams.Select(queryParam => queryParam.Key + "=" + queryParam.Value));
+            }
+            using (HttpClient client = new HttpClient())
+            {
+                client.DefaultRequestHeaders.Accept.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(acceptType.GetEnumAttribute<AcceptHeaderAttribute>().Value));
+
+                if (headers != null)
+                {
+                    foreach (var header in headers)
+                    {
+                        client.DefaultRequestHeaders.Add(header.Key, header.Value);
+                    }
+                }                
+
+                using (HttpResponseMessage response = client.DeleteAsync(uri).Result) //(HttpResponseMessage response = client.PostAsJsonAsync(url, data).Result)
+                {
+                    if (response.IsSuccessStatusCode)
+                    {
+                        return response.Content.ReadAsAsync<TResult>(GetFormatterAsEnumerable(acceptType)).Result;
+                    }
+                    throw new Exception(string.Format("DELETE call failed to {0}. Http code: {1}, Reason: {2}", uri, response.StatusCode, response.ReasonPhrase));
+                }
             }
         }
     }
