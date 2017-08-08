@@ -111,9 +111,13 @@
   <ItemGroup>
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Areas\BookingSessionAdapter.cs" />
     <Compile Include="Areas\SecureStatefulSPAFramework\Controllers\SSSPAController.cs" />
+    <Compile Include="Areas\SecureStatefulSPAFramework\Models\BookingViewModel.cs" />
+    <Compile Include="Areas\SecureStatefulSPAFramework\Models\Enums\BookingReponseStatus.cs" />
     <Compile Include="Areas\SecureStatefulSPAFramework\Models\Enums\BookTicketStep.cs" />
-    <Compile Include="Areas\SecureStatefulSPAFramework\Models\BookTicketSession.cs" />
+    <Compile Include="Areas\SecureStatefulSPAFramework\Models\BookingSessionModel.cs" />
+    <Compile Include="Areas\SecureStatefulSPAFramework\Models\S3paJsonModelBase.cs" />
     <Compile Include="Areas\SecureStatefulSPAFramework\SecureStatefulSPAFrameworkAreaRegistration.cs" />
     <Compile Include="Communicators\RestClient.cs" />
     <Compile Include="Controllers\TestController.cs" />
