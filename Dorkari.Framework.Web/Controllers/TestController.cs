@@ -24,7 +24,7 @@ namespace Dorkari.Framework.Web.Controllers
         // ../api/test?name=hombre&format=xml
         public string Get(string name, MediaType format)
         {
-            var currentBaseUri = "http://localhost/DorkariWeb"; //Request.RequestUri.GetLeftPart(System.UriPartial.Authority);
+            var currentBaseUri = Request.RequestUri.GetLeftPart(System.UriPartial.Authority);
             Stopwatch watch = new Stopwatch();
             watch.Start();
             var result = RestClient.Get<IEnumerable<Robot>>(currentBaseUri + "/api/test", format);

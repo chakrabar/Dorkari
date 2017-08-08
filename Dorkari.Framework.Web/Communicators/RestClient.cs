@@ -16,36 +16,32 @@ namespace Dorkari.Framework.Web.Communicators
         static readonly XmlMediaTypeFormatter _xmlFormatter = new XmlMediaTypeFormatter();
         static readonly ProtobufMediaTypeFormatter _protobufFormatter = new ProtobufMediaTypeFormatter();
 
+        //TODO: needs testing
         public static TResult Get<TResult>(string uri, MediaType acceptType = MediaType.JSON, Dictionary<string, string> queryParams = null, Dictionary<string, string> headers = null)
         {
-            if (queryParams != null)
-            {
-                uri += uri.Contains("?") ? "&" : "?";
-                uri += string.Join("&", queryParams.Select(queryParam => queryParam.Key + "=" + queryParam.Value));
-            }
-            using (HttpClient client = new HttpClient())
-            {
-                client.DefaultRequestHeaders.Accept.Clear();
-                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(acceptType.GetEnumAttribute<AcceptHeaderAttribute>().Value));
+            Func<HttpClient, HttpResponseMessage> httpGet = httpClient => httpClient.GetAsync(uri).Result;
+            return ExecuteHttp<TResult>(uri, httpGet, "GET", acceptType, queryParams, headers);
+        }
 
-                if (headers != null)
-                {
-                    foreach (var header in headers)
-                    {
-                        client.DefaultRequestHeaders.Add(header.Key, header.Value);
-                    }
-                }
-                
-                using (HttpResponseMessage response = client.GetAsync(uri).Result)
-                {
-                    //var contentLength = response.Content.Headers.ContentLength; //TODO: for test only
-                    if (response.IsSuccessStatusCode)
-                    {
-                        return response.Content.ReadAsAsync<TResult>(GetFormatterAsEnumerable(acceptType)).Result;
-                    }
-                    throw new Exception(string.Format("GET call failed to {0}. Http code: {1}, Reason: {2}", uri, response.StatusCode, response.ReasonPhrase));
-                }
-            }
+        //TODO: needs testing
+        public static TResult Post<TData, TResult>(string uri, TData postData, MediaType contentType = MediaType.JSON, 
+            MediaType acceptType = MediaType.JSON, Dictionary<string, string> queryParams = null, Dictionary<string, string> headers = null)
+        {
+            Func<HttpClient, HttpResponseMessage> httpPost = httpClient => httpClient.PostAsync(uri, postData, GetFormatter(contentType)).Result;
+            return ExecuteHttp<TResult>(uri, httpPost, "POST", acceptType, queryParams, headers);
+        }
+
+        public static TResult Put<TData, TResult>(string uri, TData postData, MediaType contentType = MediaType.JSON,
+            MediaType acceptType = MediaType.JSON, Dictionary<string, string> queryParams = null, Dictionary<string, string> headers = null)
+        {
+            Func<HttpClient, HttpResponseMessage> httpPut = httpClient => httpClient.PutAsync(uri, postData, GetFormatter(contentType)).Result;
+            return ExecuteHttp<TResult>(uri, httpPut, "PUT", acceptType, queryParams, headers);
+        }
+
+        public static TResult Delete<TResult>(string uri, MediaType acceptType = MediaType.JSON, Dictionary<string, string> queryParams = null, Dictionary<string, string> headers = null)
+        {
+            Func<HttpClient, HttpResponseMessage> httpDelete = httpClient => httpClient.DeleteAsync(uri).Result;
+            return ExecuteHttp<TResult>(uri, httpDelete, "DELETE", acceptType, queryParams, headers);
         }
 
         private static MediaTypeFormatter GetFormatter(MediaType format)
@@ -68,8 +64,7 @@ namespace Dorkari.Framework.Web.Communicators
             yield return GetFormatter(format);
         }
 
-        //TODO: needs more work
-        public static TResult Post<TData, TResult>(string uri, TData postData, MediaType contentType = MediaType.JSON, 
+        private static TResult ExecuteHttp<TResult>(string uri, Func<HttpClient, HttpResponseMessage> httpCall, string httpMethodName,
             MediaType acceptType = MediaType.JSON, Dictionary<string, string> queryParams = null, Dictionary<string, string> headers = null)
         {
             if (queryParams != null)
@@ -77,7 +72,6 @@ namespace Dorkari.Framework.Web.Communicators
                 uri += uri.Contains("?") ? "&" : "?";
                 uri += string.Join("&", queryParams.Select(queryParam => queryParam.Key + "=" + queryParam.Value));
             }
-
             using (HttpClient client = new HttpClient())
             {
                 client.DefaultRequestHeaders.Accept.Clear();
@@ -91,110 +85,14 @@ namespace Dorkari.Framework.Web.Communicators
                     }
                 }
 
-                using (HttpResponseMessage response = client.PostAsync(uri, postData, GetFormatter(contentType)).Result) //(HttpResponseMessage response = client.PostAsJsonAsync(url, data).Result)
+                using (HttpResponseMessage response = httpCall.Invoke(client))
                 {
                     if (response.IsSuccessStatusCode)
                     {
                         return response.Content.ReadAsAsync<TResult>(GetFormatterAsEnumerable(acceptType)).Result;
                     }
-                    throw new Exception(string.Format("POST call failed to {0}. Http code: {1}, Reason: {2}", uri, response.StatusCode, response.ReasonPhrase));
-                }
-            }
-        }
-
-        public static TResult Put<TData, TResult>(string uri, TData postData, MediaType contentType = MediaType.JSON,
-            MediaType acceptType = MediaType.JSON, Dictionary<string, string> queryParams = null, Dictionary<string, string> headers = null)
-        {
-            if (queryParams != null)
-            {
-                uri += uri.Contains("?") ? "&" : "?";
-                uri += string.Join("&", queryParams.Select(queryParam => queryParam.Key + "=" + queryParam.Value));
-            }
-
-            using (HttpClient client = new HttpClient())
-            {
-                client.DefaultRequestHeaders.Accept.Clear();
-                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(acceptType.GetEnumAttribute<AcceptHeaderAttribute>().Value));
-
-                if (headers != null)
-                {
-                    foreach (var header in headers)
-                    {
-                        client.DefaultRequestHeaders.Add(header.Key, header.Value);
-                    }
-                }
-
-                using (HttpResponseMessage response = client.PutAsync(uri, postData, GetFormatter(contentType)).Result) //(HttpResponseMessage response = client.PostAsJsonAsync(url, data).Result)
-                {
-                    if (response.IsSuccessStatusCode)
-                    {
-                        return response.Content.ReadAsAsync<TResult>(GetFormatterAsEnumerable(acceptType)).Result;
-                    }
-                    throw new Exception(string.Format("PUT call failed to {0}. Http code: {1}, Reason: {2}", uri, response.StatusCode, response.ReasonPhrase));
-                }
-            }
-        }
-
-        public static TResult Delete<TResult>(string uri, MediaType acceptType = MediaType.JSON, Dictionary<string, string> queryParams = null, Dictionary<string, string> headers = null)
-        {
-            if (queryParams != null)
-            {
-                uri += uri.Contains("?") ? "&" : "?";
-                uri += string.Join("&", queryParams.Select(queryParam => queryParam.Key + "=" + queryParam.Value));
-            }
-            using (HttpClient client = new HttpClient())
-            {
-                client.DefaultRequestHeaders.Accept.Clear();
-                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(acceptType.GetEnumAttribute<AcceptHeaderAttribute>().Value));
-
-                if (headers != null)
-                {
-                    foreach (var header in headers)
-                    {
-                        client.DefaultRequestHeaders.Add(header.Key, header.Value);
-                    }
-                }
-
-                using (HttpResponseMessage response = client.DeleteAsync(uri).Result) //(HttpResponseMessage response = client.PostAsJsonAsync(url, data).Result)
-                {
-                    if (response.IsSuccessStatusCode)
-                    {
-                        return response.Content.ReadAsAsync<TResult>(GetFormatterAsEnumerable(acceptType)).Result;
-                    }
-                    throw new Exception(string.Format("DELETE call failed to {0}. Http code: {1}, Reason: {2}", uri, response.StatusCode, response.ReasonPhrase));
-                }
-            }
-        }
-
-        public static TResult ExecuteHttp<TResult>(string uri, MediaType acceptType = MediaType.JSON, Dictionary<string, string> queryParams = null, Dictionary<string, string> headers = null)
-        {
-            //Func<HttpClient, HttpResponseMessage> httpCall = httpClient => httpClient.DeleteAsync(uri).Result;
-            //=============================
-            if (queryParams != null)
-            {
-                uri += uri.Contains("?") ? "&" : "?";
-                uri += string.Join("&", queryParams.Select(queryParam => queryParam.Key + "=" + queryParam.Value));
-            }
-            using (HttpClient client = new HttpClient())
-            {
-                client.DefaultRequestHeaders.Accept.Clear();
-                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(acceptType.GetEnumAttribute<AcceptHeaderAttribute>().Value));
-
-                if (headers != null)
-                {
-                    foreach (var header in headers)
-                    {
-                        client.DefaultRequestHeaders.Add(header.Key, header.Value);
-                    }
-                }                
-
-                using (HttpResponseMessage response = client.DeleteAsync(uri).Result) //(HttpResponseMessage response = client.PostAsJsonAsync(url, data).Result)
-                {
-                    if (response.IsSuccessStatusCode)
-                    {
-                        return response.Content.ReadAsAsync<TResult>(GetFormatterAsEnumerable(acceptType)).Result;
-                    }
-                    throw new Exception(string.Format("DELETE call failed to {0}. Http code: {1}, Reason: {2}", uri, response.StatusCode, response.ReasonPhrase));
+                    throw new Exception(string.Format("HTTP {0} call failed to {1}. Http code: {2}, Reason: {3}", 
+                        httpMethodName, uri, response.StatusCode, response.ReasonPhrase));
                 }
             }
         }
