@@ -34,6 +34,16 @@ namespace Dorkari.Helpers.Core.Extensions
                 yield return (TEnum)item;
             }
         }
+		
+		public static TEnum GetEnumValueFromAttributeString<TEnum, TAttr>(string textValue, Func<TEnum, string> attributeValueGetter) where TAttr : Attribute where TEnum : struct
+        {
+            foreach (var enumVal in GetAllItems<TEnum>())
+            {
+                if (attributeValueGetter(enumVal) == textValue)
+                    return enumVal;
+            }
+            return default(TEnum);
+        }
 
         public static T ParseEnum<T>(this string value)
         {
