@@ -172,6 +172,19 @@ namespace Dorkari.Helpers.Core.Linq
             return result;
         }
 
+        public static IEnumerable<string> SelectDuplicateKeys<T>(this IEnumerable<T> source, Func<T, string> keySelector)
+        {
+            if (source == null)
+                return null;
+            if (source.Count() == 0)
+                return Enumerable.Empty<string>();
+            return source
+                .GroupBy(e => keySelector(e))
+                .Select(grp => new { Key = grp.Key, Count = grp.Count() })
+                .Where(dict => dict.Count > 1)
+                .Select(dict => dict.Key);
+        }
+
         //TODO: match style
         public static IEnumerable<T> Merge<T>(IEnumerable<T> first, IEnumerable<T> second)
         {
