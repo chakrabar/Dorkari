@@ -11,7 +11,7 @@ namespace Dorkari.Framework.Web.Helpers
             get
             {
                 var httpContext = HttpContext.Current;
-                return httpContext?.Session;
+                return httpContext == null ? null : httpContext.Session;
             }
         }
         public bool ContainsKey(string stateKey)
