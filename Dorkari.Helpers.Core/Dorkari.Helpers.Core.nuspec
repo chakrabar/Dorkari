@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>Dorkari.Helpers.Core</id>
+    <version>$version$</version>
+    <title>Dorkari Core Helpers</title>
+    <authors>Arghya C</authors>
+    <owners>Arghya C</owners>
+    <licenseUrl>https://github.com/chakrabar/Dorkari/blob/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/chakrabar/Dorkari/tree/master/Dorkari.Helpers.Core</projectUrl>
+    <iconUrl>https://raw.githubusercontent.com/chakrabar/Dorkari/master/logo.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>A set of utilities and extensions for Linq, XML and more</description>
+    <releaseNotes>Initial NuGet internal release.</releaseNotes>
+    <copyright>Copyright 2018</copyright>
+    <tags>Linq Extensions Utilities XML</tags>
+  </metadata>
+</package>
