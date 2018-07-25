@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -46,7 +44,7 @@ namespace Dorkari.Samples.Cmd.Threads
 
     public class JobWorker
     {
-        static object locker = new object();
+        static readonly object locker = new object();
         const string _file = @"C:\Arghya\Logs\out.txt";
         public void Execute(int jobTask) //on complete, writes in file
         {

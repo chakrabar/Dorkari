@@ -21,6 +21,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <LangVersion>4</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -30,6 +31,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <LangVersion>default</LangVersion>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
@@ -58,8 +60,12 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tests\ArrayAndIList.cs" />
     <Compile Include="Tests\BoolCondition.cs" />
+    <Compile Include="Tests\Closure.cs" />
+    <Compile Include="Tests\CoAndContraVariance.cs" />
+    <Compile Include="Tests\FinalizerDestructor.cs" />
     <Compile Include="Tests\GenericInheritance.cs" />
     <Compile Include="Tests\MergeSort.cs" />
+    <Compile Include="Tests\MyDelegates.cs" />
     <Compile Include="Tests\RegexTests.cs" />
     <Compile Include="Tests\TypeInferenceTest.cs" />
     <Compile Include="Tests\WeirdClasses.cs" />

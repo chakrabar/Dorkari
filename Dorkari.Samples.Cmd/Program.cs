@@ -1,4 +1,5 @@
 ﻿using Dorkari.Samples.Cmd.Examples;
+using Dorkari.Samples.Cmd.Tests;
 using System;
 
 namespace Dorkari.Samples.Cmd
@@ -14,6 +15,12 @@ namespace Dorkari.Samples.Cmd
                 PollerExample.Show();
                 ReflectionExamples.Show();
                 StringExamples.Show();
+
+                var counter3 = Closure.WithLambdaFunc();
+                for (int i = 0; i < 4; i++)
+                {
+                    Console.WriteLine("Counter :: " + counter3());
+                }
             }
             catch (Exception ex)
             {
