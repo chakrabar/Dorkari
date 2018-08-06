@@ -32,5 +32,12 @@
             Stringer stringer = (i) => i.ToString();
             string five = stringer(5);
         }
+
+        void DelegateLocalFunction() //C# 7+
+        {
+            string stringer(int i) => i.ToString();
+            Stringer stringer1 = stringer;
+            string five = stringer(5);
+        }
     }
 }

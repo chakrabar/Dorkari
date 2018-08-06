@@ -13,6 +13,12 @@
     <description>A set of utilities and extensions for Linq, XML and more</description>
     <releaseNotes>Initial NuGet internal release.</releaseNotes>
     <copyright>Copyright 2018</copyright>
-    <tags>Linq Extensions Utilities XML</tags>
+    <tags>Linq Extensions Utilities XML</tags>	
   </metadata>
+  <files>
+    <file src="bin\Release\Dorkari.Helpers.Core.dll" target="lib\net45" />
+    <file src="bin\Release\Dorkari.Helpers.Core.pdb" target="lib\net45" />
+    <file src="bin\Release\Newtonsoft.Json.dll" target="lib\net45" />
+    <file src="bin\Release\Newtonsoft.Json.xml" target="lib\net45" />
+  </files>
 </package>

@@ -41,14 +41,9 @@ namespace Dorkari.Samples.Cmd.Tests
     {
         CoAndContraVariance _mammals = new CoAndContraVariance();
 
-        public void Test()
+        // >>> FRAMEWORK exmaples <<<
+        public void TestInFramework()
         {
-            //our contrived examples
-            Animal animal = _mammals.GetValue(); //covariance, kind of
-            Action<Human> confusion = _mammals.SetValue; //contravariance!!
-
-            // >>> FRAMEWORK exmaples <<<
-
             //COvariance - out T in IEnumerable
             var humans = new List<Human>();
             IEnumerable<Mammal> mammals = humans;
@@ -60,6 +55,13 @@ namespace Dorkari.Samples.Cmd.Tests
 
             Action<Mammal> mammalFunc = animalFunc;
             //Action<Mammal> mammalFunc2 = humanFunc; //doesn't compile
+        }
+
+        public void TestOurs()
+        {
+            //our contrived examples
+            Animal animal = _mammals.GetValue(); //covariance, kind of
+            Action<Human> confusion = _mammals.SetValue; //contravariance!!
         }
     }
 }
