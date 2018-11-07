@@ -62,6 +62,7 @@
     <Compile Include="Tests\BoolCondition.cs" />
     <Compile Include="Tests\Closure.cs" />
     <Compile Include="Tests\CoAndContraVariance.cs" />
+    <Compile Include="Tests\EmptyTypes.cs" />
     <Compile Include="Tests\FinalizerDestructor.cs" />
     <Compile Include="Tests\GenericInheritance.cs" />
     <Compile Include="Tests\MergeSort.cs" />
