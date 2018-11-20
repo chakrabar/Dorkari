@@ -15,7 +15,7 @@ namespace Dorkari.Samples.Cmd.Threads
             //[1] start 10 jobs, one-by-one
             for (int i = 0; i < jobList.Count(); i++)
             {
-                tasks[i] = ProcessJob(jobList[i]);
+                tasks[i] = ProcessJobAsync(jobList[i]);
             }
             //[4] here we have 10 awaitable Task in tasks
             //[5] do all other unrelated operations
@@ -25,18 +25,18 @@ namespace Dorkari.Samples.Cmd.Threads
             return tasks;
         }
 
-        public async Task ProcessJob(int jobTask)
+        public async Task ProcessJobAsync(int jobTask)
         {
             try
             {
                 //[2] start job in a ThreadPool, Background thread
-                var T = Task.Factory.StartNew(() =>
+                var t = Task.Factory.StartNew(() =>
                 {
                     JobWorker jobWorker = new JobWorker();
                     jobWorker.Execute(jobTask);
                 });
                 //[3] await here will keep context of calling thread
-                await T; //... and release the calling thread
+                await t; //... and release the calling thread
             }
             catch (Exception) { /*handle*/ }
         }

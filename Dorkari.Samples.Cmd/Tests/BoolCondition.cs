@@ -2,7 +2,7 @@
 {
     class BoolCondition
     {
-        int TestBool(bool isGood) //these all are comiled to !isGood
+        int TestBool(bool isGood) //these all are compiled to !isGood
         {
             int blah = 0;
             if (isGood != true)
