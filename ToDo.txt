@@ -1,4 +1,4 @@
-gitignore ...user issues
+gitignore ...user issues...
 
 documentation
 
