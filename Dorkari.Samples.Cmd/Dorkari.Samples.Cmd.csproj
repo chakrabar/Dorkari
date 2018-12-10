@@ -60,6 +60,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tests\ArrayAndIList.cs" />
     <Compile Include="Tests\BoolCondition.cs" />
+    <Compile Include="Tests\ClassAndStruct.cs" />
     <Compile Include="Tests\Closure.cs" />
     <Compile Include="Tests\CoAndContraVariance.cs" />
     <Compile Include="Tests\EmptyTypes.cs" />
