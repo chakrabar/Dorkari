@@ -1,18 +1,21 @@
 ﻿namespace Dorkari.Samples.Cmd.Tests
 {
-    public interface ISomething
+    public interface IAnimal
     {
-        int Sum(int x, int y);
+        string MakeNoise();
     }
-    public class BaseClass1
+    public class DogFamily
     {
-        public virtual int Sum(int x, int y) => x + y;
+        public virtual string MakeNoise() => "Aaooo";
     }
 
     //class can implement interface & inherit class but NOT struct
-    public class DerivedClass1 : BaseClass1, ISomething //Polygon
+    public class Husky : DogFamily, IAnimal //Polygon
     {
-        public DerivedClass1()
+        public Husky() //constructor
+        { }
+
+        ~Husky() //destructor
         { }
     }
 
@@ -24,12 +27,20 @@
             Sides = sides;
         }
 
-        public int Sides { get; set; } //can have methos, events & indexers
+        //can have properties, methods, events & indexers
+        public int Sides { get; set; }
+
+        //ONLY classes can have destructors
+        //~Polygon() { }
     }
 
     //struct can only implement interface, CANNOT inherit class or struct
-    public struct Rectangle : ISomething //Polygon
+    public struct Rectangle : IAnimal //Polygon
     {
-        public int Sum(int x, int y) => x + y;
+        public int Height { get; set; }
+        public int Width { get; set; }
+
+        //this is bad example, do not do in real code
+        public string MakeNoise() => throw new System.NotImplementedException();
     }
 }
