@@ -21,7 +21,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <LangVersion>7.2</LangVersion>
+    <LangVersion>7.3</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -69,6 +69,7 @@
     <Compile Include="Tests\EmptyTypes.cs" />
     <Compile Include="Tests\FinalizerDestructor.cs" />
     <Compile Include="Tests\GenericInheritance.cs" />
+    <Compile Include="Tests\CSharp7-3.cs" />
     <Compile Include="Tests\MergeSort.cs" />
     <Compile Include="Tests\MyDelegates.cs" />
     <Compile Include="Tests\RegexTests.cs" />

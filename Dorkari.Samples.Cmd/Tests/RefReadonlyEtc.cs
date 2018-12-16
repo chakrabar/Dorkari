@@ -45,6 +45,32 @@ namespace Dorkari.Samples.Cmd.Tests
 
         #endregion
 
+        #region Ref-Return
+
+        ref int GetPrevious(int[] arr, int idx)
+        {
+            if (arr == null || idx <= 0)
+                throw new ArgumentException();
+            return ref arr[idx - 1];
+        }
+
+        ref int GetNext(int[] arr, int idx)
+        {
+            if (arr == null || idx >= arr.Length - 1)
+                throw new ArgumentException();
+            return ref arr[idx + 1];
+        }
+
+        void TestRefReturn()
+        {
+            var arr = new[] { 1, 2, 3, 4, 5 };
+            ref int arrItem = ref GetPrevious(arr, 2);
+            //ONLY C# 7.3 and above
+            arrItem = ref GetPrevious(arr, 2);
+        }
+
+        #endregion
+
         public void TestRefReadonly()
         {
             var structArr = new Coordinate[] { new Coordinate(1, 2), new Coordinate(2, 4), new Coordinate(3, 6) };
