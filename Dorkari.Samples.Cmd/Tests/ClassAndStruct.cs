@@ -12,11 +12,9 @@
     //class can implement interface & inherit class but NOT struct
     public class Husky : DogFamily, IAnimal //Polygon
     {
-        public Husky() //constructor
-        { }
+        public Husky() { } //constructor
 
-        ~Husky() //destructor
-        { }
+        ~Husky() { } //destructor
     }
 
     public struct Polygon
@@ -42,5 +40,10 @@
 
         //this is bad example, do not do in real code
         public string MakeNoise() => throw new System.NotImplementedException();
+
+        //Struct supports Deconstructor like class (C# 7.0)
+        //needs System.ValueTuple NuGet for < .NET 4.6.2, .NET Core 1.x, .NET Standard 1.x
+        public void Deconstruct(out int height, out int width) 
+            => (height, width) = (Height, Width);
     }
 }

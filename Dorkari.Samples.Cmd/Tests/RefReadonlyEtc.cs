@@ -7,15 +7,12 @@ namespace Dorkari.Samples.Cmd.Tests
 {
     public class RefReadonlyEtc
     {
-        public ref readonly int Get(int x, int[] arr)
-        {
-            return ref arr[x];
-        }
+        #region In
 
         //can't have signatures that differ only by `ref`, `in`, or `out`
         public void M(int x) { }
-        public void M(ref int x) { }
-        //public void M(in int x) { }
+        //public void M(ref int x) { }
+        public void M(in int x) { }
         //public void M(out int x) => x = 10;
 
         //following methods do not work if parameter has ref or other modifiers
@@ -29,6 +26,24 @@ namespace Dorkari.Samples.Cmd.Tests
             await Task.Delay(100);
             return x * 2;
         }
+
+        public void M1(in int x) { }
+        public void M2(int x) { }
+        public void M2(in int x) { }
+        public void M3(in int x = 100) { }
+
+        public void TestIn()
+        {
+            M1(10); //works fine
+            //M1(in 30); //NOT allowed
+            var n = 30;
+            M1(in n); //this works
+
+            M2(n); //calls first M2
+            M2(in n); //calls second M2
+        }
+
+        #endregion
 
         public void TestRefReadonly()
         {
